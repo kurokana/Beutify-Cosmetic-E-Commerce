@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // route definitions.
         $middleware->alias([
             'check.account.active' => \App\Http\Middleware\CheckAccountActive::class,
+            'redirect.dashboard.by.role' => \App\Http\Middleware\RedirectDashboardByRole::class,
             // Requirement 14.5: verify admin role before allowing access to admin routes
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             // Requirement 14.2: Force HTTPS in production

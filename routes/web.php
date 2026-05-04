@@ -20,7 +20,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'verified', 'redirect.dashboard.by.role'])->name('dashboard');
 
 // Breeze default profile routes (kept for backward compatibility)
 Route::middleware('auth')->group(function () {
