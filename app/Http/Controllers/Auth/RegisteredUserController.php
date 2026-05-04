@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
-use App\Jobs\SendEmailVerificationJob;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -42,8 +41,8 @@ class RegisteredUserController extends Controller
         // Dispatch the Registered event for any other listeners
         event(new Registered($user));
 
-        // Dispatch email verification job asynchronously (Requirement 1.1)
-        SendEmailVerificationJob::dispatch($user);
+        // Send the verification email immediately so it does not depend on queue workers.
+        $user->sendEmailVerificationNotification();
 
         Auth::login($user);
 
