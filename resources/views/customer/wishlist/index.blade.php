@@ -1,152 +1,145 @@
 <x-app-layout>
     <x-slot name="header">
-        <nav class="flex items-center gap-2 text-sm text-gray-500">
-            <a href="{{ route('catalog.index') }}" class="hover:text-pink-600">Katalog</a>
-            <span>/</span>
-            <span class="text-gray-800 font-medium">Wishlist Saya</span>
+        <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest">
+            <a href="{{ route('catalog.index') }}" class="text-slate-400 hover:text-[#E86FA3] transition">Katalog</a>
+            <span class="text-[#FFD1DC]">/</span>
+            <span class="text-slate-800">Wishlist Saya</span>
         </nav>
     </x-slot>
 
-    <div class="py-8">
+    <div class="py-12 bg-[#FFF9FB] min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
             {{-- Flash Messages --}}
             @if (session('success'))
-                <div class="mb-4 p-4 bg-green-50 border border-green-200 rounded-xl text-green-700 text-sm">
+                <div class="mb-6 p-4 bg-white border-l-4 border-[#89CFF0] rounded-r-xl shadow-sm text-slate-600 text-[11px] font-bold uppercase tracking-wide">
                     {{ session('success') }}
                 </div>
             @endif
 
-            @if ($errors->any())
-                <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
-                    <ul class="list-disc list-inside space-y-1">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            <div class="flex items-center justify-between mb-6">
-                <h1 class="text-2xl font-bold text-gray-900">Wishlist Saya</h1>
-                <span class="text-sm text-gray-500">{{ $wishlists->count() }} produk tersimpan</span>
+            {{-- Header Section --}}
+            <div class="flex items-end justify-between mb-8 border-b border-[#FFD1DC]/40 pb-4">
+                <h1 class="text-2xl font-bold tracking-tight">
+                    <span class="text-[#89CFF0]">Wishlist</span> 
+                    <span class="text-[#E86FA3]">Favorit</span>
+                </h1>
+                
+                <span class="px-3 py-1 bg-white border border-[#FFD1DC] text-[#E86FA3] text-[10px] font-black uppercase tracking-widest rounded-lg shadow-sm">
+                    {{ $wishlists->count() }} Produk Tersimpan
+                </span>
             </div>
 
             @if ($wishlists->isEmpty())
-                {{-- Empty Wishlist State --}}
-                <div class="bg-white rounded-xl shadow-sm p-12 text-center">
-                    <svg class="mx-auto w-16 h-16 text-gray-200 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                    </svg>
-                    <h2 class="text-lg font-semibold text-gray-700 mb-2">Wishlist Anda kosong</h2>
-                    <p class="text-sm text-gray-400 mb-6">Simpan produk favorit Anda untuk dibeli nanti.</p>
+                {{-- Empty State --}}
+                <div class="bg-white rounded-[2.5rem] border border-[#FFD1DC]/50 shadow-sm p-16 text-center">
+                    <div class="w-20 h-20 bg-[#FFF9FB] rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-10 h-10 text-[#FFD1DC]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </div>
+                    <h2 class="text-lg font-bold text-slate-800 mb-2">Wishlist Anda masih kosong</h2>
                     <a href="{{ route('catalog.index') }}"
-                        class="inline-flex items-center gap-2 px-6 py-3 bg-pink-600 text-white rounded-xl font-semibold hover:bg-pink-700 transition">
-                        Jelajahi Produk
+                        class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-[#E86FA3] to-[#89CFF0] text-white text-[11px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg">
+                        Cari Produk
                     </a>
                 </div>
             @else
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                     @foreach ($wishlists as $wishlist)
                         @php
                             $product = $wishlist->product;
-                            $primaryImage = $product?->images?->firstWhere('is_primary', true)
-                                ?? $product?->images?->first();
+                            $primaryImage = $product?->images?->firstWhere('is_primary', true) ?? $product?->images?->first();
+                            $rating = (float) ($product?->average_rating ?? 0);
                         @endphp
 
                         @if ($product)
-                            <div class="bg-white rounded-xl shadow-sm overflow-hidden flex flex-col">
-                                {{-- Product Image --}}
-                                <a href="{{ route('catalog.show', $product->slug) }}"
-                                    class="block aspect-square overflow-hidden bg-gray-50 group">
-                                    @if ($primaryImage)
-                                        <img
-                                            src="{{ Storage::url($primaryImage->image_path) }}"
-                                            alt="{{ $product->name }}"
-                                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                            loading="lazy"
-                                        >
-                                    @else
-                                        <div class="w-full h-full flex items-center justify-center text-gray-300">
-                                            <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                            </svg>
-                                        </div>
-                                    @endif
+                            {{-- Card Start --}}
+                            <div class="group relative flex flex-col overflow-hidden rounded-[1.75rem] bg-white border border-[#FFD1DC]/60 shadow-[0_14px_35px_rgba(248,187,208,0.18)] hover:shadow-[0_20px_45px_rgba(137,207,240,0.22)] hover:-translate-y-1.5 transition-all duration-300">
+                                
+                                {{-- Decorative soft gradient (Persis Catalog) --}}
+                                <div class="absolute inset-x-0 top-0 h-28 bg-gradient-to-br from-[#FFF1F6] via-white to-[#EAF8FF] pointer-events-none"></div>
+
+                                {{-- Wishlist toggle (Tombol Hapus - Warna Pink Pekat) --}}
+                                <form action="{{ route('wishlist.toggle', $product) }}" method="POST" class="absolute top-3 right-3 z-20">
+                                    @csrf
+                                    <button type="submit"
+                                        class="w-9 h-9 rounded-full flex items-center justify-center border transition-all duration-200 shadow-sm bg-[#E86FA3] text-white border-[#E86FA3] hover:bg-[#D9578F]"
+                                        title="Hapus dari Wishlist">
+                                        <svg class="w-4.5 h-4.5" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                        </svg>
+                                    </button>
+                                </form>
+
+                                {{-- Image Section --}}
+                                <a href="{{ route('catalog.show', $product->slug) }}" class="relative z-10 block">
+                                    <div class="relative mx-3 mt-3 aspect-square overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-[#FFF8FB] to-[#EAF8FF] border border-white">
+                                        <img src="{{ $primaryImage ? Storage::url($primaryImage->image_path) : asset('images/placeholder.png') }}" 
+                                             alt="{{ $product->name }}" 
+                                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                    </div>
                                 </a>
 
-                                {{-- Product Info --}}
-                                <div class="p-4 flex flex-col flex-1">
-                                    <p class="text-xs text-pink-600 font-medium mb-0.5">{{ $product->brand?->name }}</p>
-                                    <a href="{{ route('catalog.show', $product->slug) }}"
-                                        class="text-sm font-semibold text-gray-800 hover:text-pink-600 line-clamp-2 leading-snug flex-1">
-                                        {{ $product->name }}
-                                    </a>
-
-                                    {{-- Price --}}
-                                    <p class="mt-2 text-base font-bold text-gray-900">
-                                        Rp {{ number_format($product->price, 0, ',', '.') }}
-                                    </p>
-
-                                    {{-- Stock Status --}}
-                                    <div class="mt-1 mb-3">
-                                        @if ($product->stock <= 0)
-                                            <span class="inline-flex items-center gap-1 text-xs font-medium text-red-600">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-                                                Stok Habis
-                                            </span>
-                                        @elseif ($product->stock <= 5)
-                                            <span class="inline-flex items-center gap-1 text-xs font-medium text-orange-600">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
-                                                Stok Terbatas ({{ $product->stock }} tersisa)
-                                            </span>
-                                        @else
-                                            <span class="inline-flex items-center gap-1 text-xs font-medium text-green-600">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                                                Tersedia
-                                            </span>
+                                {{-- Info Section --}}
+                                <div class="p-4 flex-1 flex flex-col relative z-10">
+                                    <div class="flex items-center justify-between gap-2 mb-1">
+                                        <p class="text-[11px] text-[#E86FA3] font-extrabold uppercase tracking-wide truncate">
+                                            {{ $product->brand?->name ?? 'Beauty Brand' }}
+                                        </p>
+                                        @if ($product->stock > 0)
+                                            <span class="shrink-0 w-2 h-2 rounded-full bg-[#89CFF0]"></span>
                                         @endif
                                     </div>
 
-                                    {{-- Action Buttons --}}
-                                    <div class="flex gap-2 mt-auto">
-                                        {{-- Move to Cart --}}
-                                        @if ($product->stock > 0)
-                                            <form action="{{ route('wishlist.moveToCart', $product) }}" method="POST" class="flex-1">
-                                                @csrf
-                                                <button type="submit"
-                                                    class="w-full py-2 bg-pink-600 text-white text-xs font-semibold rounded-lg hover:bg-pink-700 transition">
-                                                    Pindah ke Keranjang
-                                                </button>
-                                            </form>
-                                        @else
-                                            <button disabled
-                                                class="flex-1 py-2 bg-gray-100 text-gray-400 text-xs font-semibold rounded-lg cursor-not-allowed">
-                                                Stok Habis
-                                            </button>
-                                        @endif
+                                    <h3 class="text-sm font-bold text-slate-800 line-clamp-2 leading-snug min-h-[2.5rem] group-hover:text-[#E86FA3] transition-colors">
+                                        {{ $product->name }}
+                                    </h3>
 
-                                        {{-- Remove from Wishlist --}}
-                                        <form action="{{ route('wishlist.toggle', $product) }}" method="POST">
+                                    {{-- Star rating (Kuning) --}}
+                                    <div class="flex items-center gap-1.5 mt-3">
+                                        <div class="flex text-yellow-400 text-xs">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                <span>{{ $i <= floor($rating) ? '★' : '☆' }}</span>
+                                            @endfor
+                                        </div>
+                                        <span class="text-[11px] text-slate-400 font-semibold">{{ number_format($rating, 1) }}</span>
+                                    </div>
+
+                                    {{-- Price & Stock --}}
+                                    <div class="mt-3">
+                                        <p class="text-base font-extrabold text-slate-900">
+                                            Rp {{ number_format($product->price, 0, ',', '.') }}
+                                        </p>
+                                        <p class="mt-1 text-[11px] {{ $product->stock <= 0 ? 'text-red-500 font-bold' : 'text-slate-400 font-semibold' }}">
+                                            {{ $product->stock <= 0 ? 'Stok Habis' : 'Stok tersedia' }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {{-- Add to cart button (Gradasi Pink ke Biru) --}}
+                                <div class="relative z-10 px-4 pb-4 mt-auto">
+                                    @if ($product->stock > 0)
+                                        <form action="{{ route('wishlist.moveToCart', $product) }}" method="POST">
                                             @csrf
                                             <button type="submit"
-                                                class="p-2 rounded-lg border border-gray-200 text-gray-400 hover:border-red-300 hover:text-red-500 transition"
-                                                title="Hapus dari wishlist">
-                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                                                    <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                                class="w-full py-3 bg-gradient-to-r from-[#E86FA3] to-[#89CFF0] text-white text-xs font-extrabold rounded-full shadow-lg shadow-[#F8BBD0]/30 hover:shadow-[#89CFF0]/30 hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                                                 </svg>
+                                                Pindah ke Keranjang
                                             </button>
                                         </form>
-                                    </div>
+                                    @else
+                                        <button disabled class="w-full py-3 bg-slate-100 text-slate-400 text-xs font-extrabold rounded-full cursor-not-allowed uppercase tracking-widest">
+                                            Stok Habis
+                                        </button>
+                                    @endif
                                 </div>
                             </div>
                         @endif
                     @endforeach
                 </div>
             @endif
-
         </div>
     </div>
 </x-app-layout>

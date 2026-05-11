@@ -1,106 +1,40 @@
 <x-app-layout>
-    <x-slot name="header">
-        <div class="flex items-center gap-3">
-            <a href="{{ route('customer.profile.index') }}"
-               class="text-gray-500 hover:text-gray-700 transition">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                </svg>
-            </a>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Edit Profil
-            </h2>
-        </div>
-    </x-slot>
+    <style>
+        .beauty-shadow { box-shadow: 0 18px 45px rgba(244, 194, 194, 0.22) !important; }
+        .form-beauty-focus:focus { 
+            border-color: #89CFF0 !important; 
+            ring-color: #89CFF0 !important;
+            box-shadow: 0 0 0 4px rgba(137, 207, 240, 0.2) !important;
+        }
+    </style>
 
-    <div class="py-12">
+    <div class="py-12 bg-[#FFF9FC] min-h-screen">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow sm:rounded-lg overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-100">
-                    <h3 class="text-lg font-semibold text-gray-800">Perbarui Informasi Profil</h3>
-                    <p class="mt-1 text-sm text-gray-500">Perbarui nama, email, dan nomor telepon akun Anda.</p>
+            <div class="bg-white rounded-[2.5rem] border border-[#FFD1DC] beauty-shadow overflow-hidden">
+                <div class="px-8 py-6 border-b border-[#FFD1DC] bg-gradient-to-r from-[#EAF8FF] to-white">
+                    <h3 class="text-lg font-bold text-slate-800">Edit Profil</h3>
                 </div>
 
-                <form method="POST" action="{{ route('customer.profile.update') }}" class="px-6 py-6 space-y-5">
+                <form method="POST" action="{{ route('customer.profile.update') }}" class="p-8 space-y-6">
                     @csrf
                     @method('PUT')
 
-                    {{-- Name --}}
                     <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700">
-                            Nama Lengkap <span class="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            value="{{ old('name', $user->name) }}"
-                            required
-                            autocomplete="name"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm
-                                   @error('name') border-red-400 @enderror"
-                        >
-                        @error('name')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                        <label class="block text-[10px] font-black text-[#E86FA3] uppercase tracking-widest mb-2">Nama Lengkap</label>
+                        <input type="text" name="name" value="{{ old('name', $user->name) }}" 
+                               class="w-full rounded-2xl border-[#FFD1DC] bg-[#FFF9FB]/50 font-bold text-slate-700 form-beauty-focus">
                     </div>
 
-                    {{-- Email --}}
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700">
-                            Alamat Email <span class="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value="{{ old('email', $user->email) }}"
-                            required
-                            autocomplete="email"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm
-                                   @error('email') border-red-400 @enderror"
-                        >
-                        @error('email')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-
-                        @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
-                            <p class="mt-1.5 text-sm text-amber-600">
-                                Email Anda belum diverifikasi. Jika Anda mengubah email, verifikasi ulang diperlukan.
-                            </p>
-                        @endif
+                        <label class="block text-[10px] font-black text-[#E86FA3] uppercase tracking-widest mb-2">Email</label>
+                        <input type="email" name="email" value="{{ old('email', $user->email) }}" 
+                               class="w-full rounded-2xl border-[#FFD1DC] bg-[#FFF9FB]/50 font-bold text-slate-700 form-beauty-focus">
                     </div>
 
-                    {{-- Phone --}}
-                    <div>
-                        <label for="phone" class="block text-sm font-medium text-gray-700">
-                            Nomor Telepon
-                        </label>
-                        <input
-                            type="tel"
-                            id="phone"
-                            name="phone"
-                            value="{{ old('phone', $user->phone) }}"
-                            autocomplete="tel"
-                            placeholder="Contoh: 08123456789"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm
-                                   @error('phone') border-red-400 @enderror"
-                        >
-                        @error('phone')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    {{-- Actions --}}
-                    <div class="flex items-center justify-between pt-2">
-                        <a href="{{ route('customer.profile.index') }}"
-                           class="text-sm text-gray-600 hover:text-gray-800 transition">
-                            Batal
-                        </a>
-                        <button
-                            type="submit"
-                            class="inline-flex items-center px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md shadow-sm transition focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        >
+                    <div class="flex items-center justify-between pt-6">
+                        <a href="{{ route('customer.profile.index') }}" class="text-[10px] font-black uppercase text-slate-400">Batal</a>
+                        <button type="submit" 
+                                class="px-8 py-4 bg-gradient-to-r from-[#E86FA3] to-[#89CFF0] text-white text-[11px] font-black uppercase tracking-widest rounded-full shadow-lg hover:-translate-y-0.5 transition-all">
                             Simpan Perubahan
                         </button>
                     </div>
