@@ -16,8 +16,11 @@ class Address extends Model
         'label',
         'recipient_name',
         'phone',
+        'province_id',
         'province',
+        'city_id',
         'city',
+        'district_id',
         'district',
         'postal_code',
         'full_address',
@@ -27,6 +30,9 @@ class Address extends Model
     protected function casts(): array
     {
         return [
+            'province_id' => 'integer',
+            'city_id' => 'integer',
+            'district_id' => 'integer',
             'is_default' => 'boolean',
         ];
     }

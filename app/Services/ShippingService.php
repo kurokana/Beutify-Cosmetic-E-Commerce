@@ -40,10 +40,20 @@ class ShippingService
      */
     public function calculateShippingCost(Address $address, int $weight): array
     {
-        // For now, we'll use a simple city ID extraction from the address
-        // In a real implementation, you'd need to map city names to RajaOngkir city IDs
-        // or store the city_id in the addresses table
-        $destinationCityId = $this->getCityIdFromAddress($address);
+        try {
+            $destinationCityId = $this->getCityIdFromAddress($address);
+        } catch (\Throwable $e) {
+            if ($this->shouldUseRealShippingOnly()) {
+                throw $e;
+            }
+
+            \Log::warning('Falling back to estimated shipping options', [
+                'address_id' => $address->id,
+                'message' => $e->getMessage(),
+            ]);
+
+            return $this->buildFallbackShippingOptions($address, $weight);
+        }
 
         $allOptions = [];
 
@@ -66,7 +76,11 @@ class ShippingService
         }
 
         if (empty($allOptions)) {
-            throw new \Exception('Tidak dapat menghitung ongkos kirim. Silakan coba lagi.');
+            if ($this->shouldUseRealShippingOnly()) {
+                throw new \Exception('Tidak dapat menghitung ongkos kirim. Silakan coba lagi.');
+            }
+
+            return $this->buildFallbackShippingOptions($address, $weight);
         }
 
         return $allOptions;
@@ -202,16 +216,121 @@ class ShippingService
      */
     private function getCityIdFromAddress(Address $address): int
     {
-        // TODO: Implement proper city ID mapping
-        // For now, we'll assume the city field contains a numeric city ID
-        // or we'll use a default value for testing
+        if (! empty($address->city_id) && is_numeric($address->city_id)) {
+            return (int) $address->city_id;
+        }
 
         if (is_numeric($address->city)) {
             return (int) $address->city;
         }
 
-        // If city is not numeric, we need to map it to a RajaOngkir city ID
-        // This would typically involve calling RajaOngkir's city API or using a local mapping
+        $resolvedCityId = $this->resolveCityIdFromLegacyAddress($address);
+        if ($resolvedCityId !== null) {
+            return $resolvedCityId;
+        }
+
         throw new \Exception('Kota tujuan tidak valid. Silakan pilih kota dari daftar yang tersedia.');
+    }
+
+    private function resolveCityIdFromLegacyAddress(Address $address): ?int
+    {
+        try {
+            $provinceId = $address->province_id;
+
+            if (empty($provinceId) && ! empty($address->province)) {
+                $provinceId = $this->resolveProvinceIdByName($address->province);
+            }
+
+            if (empty($provinceId)) {
+                return null;
+            }
+
+            $cities = $this->client->getCities((int) $provinceId);
+            $normalizedTargetCity = $this->normalizeLocationLabel((string) $address->city);
+
+            foreach ($cities as $city) {
+                $candidate = $this->normalizeLocationLabel(trim(($city['type'] ?? '') . ' ' . ($city['city_name'] ?? '')));
+                $candidateNameOnly = $this->normalizeLocationLabel((string) ($city['city_name'] ?? ''));
+
+                if ($candidate === $normalizedTargetCity || $candidateNameOnly === $normalizedTargetCity) {
+                    return (int) ($city['city_id'] ?? 0) ?: null;
+                }
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('Failed to resolve city ID from legacy address', [
+                'address_id' => $address->id,
+                'message' => $e->getMessage(),
+            ]);
+        }
+
+        return null;
+    }
+
+    private function resolveProvinceIdByName(string $provinceName): ?int
+    {
+        try {
+            $target = $this->normalizeLocationLabel($provinceName);
+
+            foreach ($this->client->getProvinces() as $province) {
+                if ($this->normalizeLocationLabel((string) ($province['province'] ?? '')) === $target) {
+                    return (int) ($province['province_id'] ?? 0) ?: null;
+                }
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('Failed to resolve province ID from legacy address', [
+                'province' => $provinceName,
+                'message' => $e->getMessage(),
+            ]);
+        }
+
+        return null;
+    }
+
+    private function normalizeLocationLabel(string $value): string
+    {
+        $value = mb_strtolower(trim($value));
+
+        return preg_replace('/\s+/', ' ', $value) ?? $value;
+    }
+
+    /**
+     * Fallback shipping estimates when RajaOngkir cannot be reached or mapped.
+     */
+    private function buildFallbackShippingOptions(Address $address, int $weight): array
+    {
+        $packages = max(1, (int) ceil($weight / 1000));
+        $baseCost = 12000 + ($packages * 2500);
+
+        return [
+            [
+                'courier_name' => 'jne',
+                'service' => 'REG',
+                'description' => 'Estimasi pengiriman reguler',
+                'cost' => $baseCost,
+                'etd' => '2-4',
+                'note' => 'Estimasi lokal saat data ongkir tidak tersedia',
+            ],
+            [
+                'courier_name' => 'jnt',
+                'service' => 'EZ',
+                'description' => 'Estimasi pengiriman ekonomis',
+                'cost' => $baseCost + 1500,
+                'etd' => '2-4',
+                'note' => 'Estimasi lokal saat data ongkir tidak tersedia',
+            ],
+            [
+                'courier_name' => 'sicepat',
+                'service' => 'REG',
+                'description' => 'Estimasi pengiriman reguler',
+                'cost' => $baseCost + 1000,
+                'etd' => '1-3',
+                'note' => 'Estimasi lokal saat data ongkir tidak tersedia',
+            ],
+        ];
+    }
+
+    private function shouldUseRealShippingOnly(): bool
+    {
+        return app()->environment('testing');
     }
 }

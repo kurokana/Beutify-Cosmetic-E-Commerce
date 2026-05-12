@@ -145,10 +145,39 @@
                                     <input type="text" placeholder="Label (mis. Rumah, Kantor)" x-model="newAddress.label" class="p-2 border rounded">
                                     <input type="text" placeholder="Nama Penerima" x-model="newAddress.recipient_name" class="p-2 border rounded">
                                     <input type="text" placeholder="No. HP" x-model="newAddress.phone" class="p-2 border rounded">
-                                    <input type="text" placeholder="Kode Pos" x-model="newAddress.postal_code" class="p-2 border rounded">
-                                    <input type="text" placeholder="Provinsi" x-model="newAddress.province" class="p-2 border rounded md:col-span-2">
-                                    <input type="text" placeholder="Kota" x-model="newAddress.city" class="p-2 border rounded">
-                                    <input type="text" placeholder="Kecamatan" x-model="newAddress.district" class="p-2 border rounded">
+
+                                    <select x-model="newAddress.province_id" @change="onProvinceChange()"
+                                        class="p-2 border rounded md:col-span-2">
+                                        <option value="">Pilih Provinsi</option>
+                                        <template x-for="prov in provinces" :key="prov.province_id">
+                                            <option :value="prov.province_id" x-text="prov.province"></option>
+                                        </template>
+                                    </select>
+
+                                    <select x-model="newAddress.city_id" @change="onCityChange()" class="p-2 border rounded">
+                                        <option value="">Pilih Kota / Kabupaten</option>
+                                        <template x-for="city in cities" :key="city.city_id">
+                                            <option :value="city.city_id" :data-type="city.type" x-text="city.type + ' ' + city.city_name"></option>
+                                        </template>
+                                    </select>
+
+                                    <select x-model="newAddress.district_id" @change="onDistrictChange($event)" class="p-2 border rounded">
+                                        <option value="">Pilih Kecamatan</option>
+                                        <template x-for="sub in subdistricts" :key="sub.subdistrict_id">
+                                            <option :value="sub.subdistrict_id" :data-postal="sub.postal_code" :data-name="sub.subdistrict_name" x-text="sub.subdistrict_name"></option>
+                                        </template>
+                                    </select>
+
+                                    <select x-model="newAddress.postal_code" class="p-2 border rounded">
+                                        <option value="">Pilih Kode Pos</option>
+                                        <template x-for="postal in postalCodes" :key="postal">
+                                            <option :value="postal" x-text="postal"></option>
+                                        </template>
+                                    </select>
+
+                                    <div class="text-xs text-slate-500 md:col-span-2" x-show="postalLoading">Memuat kode pos...</div>
+                                    <div class="text-xs text-red-500 md:col-span-2" x-show="postalError" x-text="postalError"></div>
+
                                     <textarea placeholder="Alamat lengkap" x-model="newAddress.full_address" class="p-2 border rounded md:col-span-2"></textarea>
                                 </div>
 
@@ -405,12 +434,19 @@
                 selectedAddressId: {{ $addresses->where('is_default', true)->first()?->id ?? $addresses->first()?->id ?? 'null' }},
                 // Add-address modal state
                 showAddAddressModal: false,
+                provinces: [],
+                cities: [],
+                subdistricts: [],
+                postalCodes: [],
                 newAddress: {
                     label: '',
                     recipient_name: '',
                     phone: '',
+                    province_id: '',
                     province: '',
+                    city_id: '',
                     city: '',
+                    district_id: '',
                     district: '',
                     postal_code: '',
                     full_address: '',
@@ -418,6 +454,8 @@
                 },
                 addAddressLoading: false,
                 addAddressError: '',
+                postalLoading: false,
+                postalError: '',
                 courierLoading: false,
                 courierError: '',
                 courierOptions: [],
@@ -453,6 +491,9 @@
                 openAddAddress() {
                     this.addAddressError = '';
                     this.showAddAddressModal = true;
+                    if (!this.provinces.length) {
+                        this.loadProvinces();
+                    }
                 },
 
                 async submitNewAddress() {
@@ -467,15 +508,30 @@
                     this.addAddressLoading = true;
 
                     try {
-                        const response = await fetch('/customer/addresses', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                            },
-                            body: JSON.stringify(this.newAddress),
-                        });
+                        const payload = {
+                            label: this.newAddress.label,
+                            recipient_name: this.newAddress.recipient_name,
+                            phone: this.newAddress.phone,
+                            province_id: this.newAddress.province_id || null,
+                            province: this.newAddress.province || '',
+                            city_id: this.newAddress.city_id || null,
+                            city: this.newAddress.city || '',
+                            district_id: this.newAddress.district_id || null,
+                            district: this.newAddress.district || '',
+                            postal_code: this.newAddress.postal_code,
+                            full_address: this.newAddress.full_address,
+                            is_default: this.newAddress.is_default ? 1 : 0,
+                        };
+
+                            const response = await fetch('/customer/addresses', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Accept': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                },
+                                body: JSON.stringify(payload),
+                            });
 
                         const data = await response.json();
 
@@ -489,6 +545,102 @@
                         this.addAddressError = 'Tidak dapat menyimpan alamat. Silakan coba lagi.';
                     } finally {
                         this.addAddressLoading = false;
+                    }
+                },
+
+                async loadProvinces() {
+                    try {
+                        const res = await fetch('/customer/rajaongkir/provinces', { headers: { Accept: 'application/json' } });
+                        const data = await res.json();
+                        if (res.ok && data.success) {
+                            this.provinces = data.data;
+                        }
+                    } catch (e) {
+                        // ignore
+                    }
+                },
+
+                async onProvinceChange() {
+                    this.cities = [];
+                    this.subdistricts = [];
+                    this.newAddress.province = '';
+                    this.newAddress.city_id = '';
+                    this.newAddress.city = '';
+                    this.newAddress.district_id = '';
+                    this.newAddress.district = '';
+                    this.newAddress.postal_code = '';
+                    if (!this.newAddress.province_id) return;
+                    try {
+                        const res = await fetch(`/customer/rajaongkir/cities?province_id=${this.newAddress.province_id}`, { headers: { Accept: 'application/json' } });
+                        const data = await res.json();
+                        if (res.ok && data.success) {
+                            this.cities = data.data;
+                            const selected = this.provinces.find(p => String(p.province_id) === String(this.newAddress.province_id));
+                            this.newAddress.province = selected ? selected.province : '';
+                        }
+                    } catch (e) {}
+                },
+
+                async onCityChange() {
+                    this.subdistricts = [];
+                    this.postalCodes = [];
+                    this.newAddress.city = '';
+                    this.newAddress.district_id = '';
+                    this.newAddress.district = '';
+                    this.newAddress.postal_code = '';
+                    if (!this.newAddress.city_id) return;
+                    try {
+                        const res = await fetch(`/customer/rajaongkir/subdistricts?city_id=${this.newAddress.city_id}`, { headers: { Accept: 'application/json' } });
+                        const data = await res.json();
+                        if (res.ok && data.success) {
+                            this.subdistricts = data.data;
+                            const selected = this.cities.find(c => String(c.city_id) === String(this.newAddress.city_id));
+                            this.newAddress.city = selected ? (selected.type + ' ' + selected.city_name) : '';
+                        }
+                    } catch (e) {}
+                },
+
+                async onDistrictChange(event) {
+                    const sel = event?.target;
+                    if (!sel) return;
+                    const opt = sel.options[sel.selectedIndex];
+                    const postal = opt?.dataset?.postal;
+                    const districtName = opt?.dataset?.name;
+                    if (districtName) this.newAddress.district = districtName;
+                    if (postal) this.newAddress.postal_code = postal;
+
+                    await this.loadPostalCodes();
+                },
+
+                async loadPostalCodes() {
+                    this.postalCodes = [];
+                    this.postalError = '';
+
+                    if (!this.newAddress.district_id) return;
+
+                    this.postalLoading = true;
+
+                    try {
+                        const res = await fetch(`/customer/rajaongkir/postal-codes?district_id=${this.newAddress.district_id}`, {
+                            headers: { Accept: 'application/json' },
+                        });
+                        const data = await res.json();
+
+                        if (res.ok && data.success) {
+                            this.postalCodes = data.data ?? [];
+
+                            if (this.postalCodes.length === 1) {
+                                this.newAddress.postal_code = this.postalCodes[0];
+                            } else if (this.postalCodes.length > 1 && !this.postalCodes.includes(this.newAddress.postal_code)) {
+                                this.newAddress.postal_code = '';
+                            }
+                        } else {
+                            this.postalError = data.message || 'Gagal memuat kode pos.';
+                        }
+                    } catch (e) {
+                        this.postalError = 'Gagal memuat kode pos.';
+                    } finally {
+                        this.postalLoading = false;
                     }
                 },
 
