@@ -668,7 +668,12 @@
                         const data = await response.json();
 
                         if (response.ok && data.success) {
-                            this.courierOptions = data.options ?? [];
+                            // Normalize options and add stable keys for radio selection.
+                            const rawOptions = data.data ?? data.options ?? [];
+                            this.courierOptions = rawOptions.map((option, index) => ({
+                                ...option,
+                                key: option.key ?? `${option.courier_name ?? 'courier'}-${option.service ?? 'service'}-${option.cost ?? 0}-${index}`,
+                            }));
                         } else {
                             this.courierError = data.message || 'Gagal memuat pilihan kurir. Silakan coba lagi.';
                         }
