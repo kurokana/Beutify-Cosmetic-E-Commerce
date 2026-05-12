@@ -138,4 +138,73 @@ class RajaOngkirClient
             throw new \Exception('Gagal melacak pengiriman. Silakan coba lagi.');
         }
     }
+
+    /**
+     * Get list of provinces.
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function getProvinces(): array
+    {
+        $response = Http::withHeaders(['key' => $this->apiKey])->get("{$this->baseUrl}/province");
+
+        if ($response->failed()) {
+            Log::error('RajaOngkir provinces error', ['status' => $response->status(), 'body' => $response->body()]);
+            throw new \Exception('Gagal memuat daftar provinsi.');
+        }
+
+        $data = $response->json();
+
+        return $data['rajaongkir']['results'] ?? [];
+    }
+
+    /**
+     * Get list of cities within a province.
+     *
+     * @param int|string $provinceId
+     * @return array
+     * @throws \Exception
+     */
+    public function getCities($provinceId): array
+    {
+        $response = Http::withHeaders(['key' => $this->apiKey])->get("{$this->baseUrl}/city", ['province' => $provinceId]);
+
+        if ($response->failed()) {
+            Log::error('RajaOngkir cities error', ['status' => $response->status(), 'body' => $response->body()]);
+            throw new \Exception('Gagal memuat daftar kota.');
+        }
+
+        $data = $response->json();
+
+        return $data['rajaongkir']['results'] ?? [];
+    }
+
+    /**
+     * Get list of subdistricts (kecamatan) for a city.
+     * Note: availability depends on RajaOngkir plan. If not available, returns empty.
+     *
+     * @param int|string $cityId
+     * @return array
+     * @throws \Exception
+     */
+    public function getSubdistricts($cityId): array
+    {
+        // Some RajaOngkir plans support /subdistrict endpoint
+        try {
+            $response = Http::withHeaders(['key' => $this->apiKey])->get("{$this->baseUrl}/subdistrict", ['city' => $cityId]);
+
+            if ($response->failed()) {
+                Log::warning('RajaOngkir subdistricts API failed', ['status' => $response->status(), 'body' => $response->body()]);
+                return [];
+            }
+
+            $data = $response->json();
+
+            return $data['rajaongkir']['results'] ?? [];
+        } catch (\Throwable $e) {
+            Log::warning('RajaOngkir subdistricts exception', ['message' => $e->getMessage()]);
+            return [];
+        }
+    }
 }
