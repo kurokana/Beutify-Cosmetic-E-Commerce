@@ -35,14 +35,29 @@ class PaymentService
         /** @var Payment $payment */
         $payment = $order->payment;
 
-        // If a valid snap_token already exists, reuse it
-        if ($payment && $payment->snap_token) {
+        if ($payment && $this->shouldReuseSnapToken($payment)) {
             return $payment->snap_token;
+        }
+
+        $midtransOrderId = $payment?->midtrans_order_id ?? $order->order_number;
+
+        if ($payment && $this->shouldRefreshPayment($payment)) {
+            $midtransOrderId = $this->buildMidtransOrderId($order);
+            $payment->update([
+                'midtrans_order_id' => $midtransOrderId,
+                'midtrans_transaction_id' => null,
+                'payment_method' => null,
+                'payment_type' => null,
+                'status' => 'pending',
+                'snap_token' => null,
+                'paid_at' => null,
+                'expired_at' => now()->addHours(24),
+            ]);
         }
 
         $params = [
             'transaction_details' => [
-                'order_id'     => $order->order_number,
+                'order_id'     => $midtransOrderId,
                 'gross_amount' => (int) round((float) $order->total_amount),
             ],
             'customer_details' => $this->buildCustomerDetails($order),
@@ -54,11 +69,14 @@ class PaymentService
 
         // Persist the snap_token
         if ($payment) {
-            $payment->update(['snap_token' => $snapToken]);
+            $payment->update([
+                'midtrans_order_id' => $midtransOrderId,
+                'snap_token' => $snapToken,
+            ]);
         } else {
             Payment::create([
                 'order_id'          => $order->id,
-                'midtrans_order_id' => $order->order_number,
+                'midtrans_order_id' => $midtransOrderId,
                 'amount'            => $order->total_amount,
                 'status'            => 'pending',
                 'snap_token'        => $snapToken,
@@ -142,5 +160,28 @@ class PaymentService
         }
 
         return $items;
+    }
+
+    private function shouldReuseSnapToken(Payment $payment): bool
+    {
+        if (! $payment->snap_token || $payment->status !== 'pending') {
+            return false;
+        }
+
+        return ! $payment->expired_at || $payment->expired_at->isFuture();
+    }
+
+    private function shouldRefreshPayment(Payment $payment): bool
+    {
+        if ($payment->status !== 'pending') {
+            return true;
+        }
+
+        return $payment->expired_at && $payment->expired_at->isPast();
+    }
+
+    private function buildMidtransOrderId(Order $order): string
+    {
+        return $order->order_number . '-' . now()->format('YmdHis');
     }
 }
