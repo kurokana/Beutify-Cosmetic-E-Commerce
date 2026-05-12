@@ -27,7 +27,7 @@
 
             <div class="space-y-6">
 
-                {{── Ringkasan Pesanan ──}}
+                {{-- Ringkasan Pesanan --}}
                 <div class="bg-white rounded-2xl border border-[#FFD1DC]/40 shadow-sm p-6">
                     <h2 class="text-base font-black text-gray-800 mb-4 flex items-center gap-2">
                         <svg class="w-5 h-5 text-[#E86FA3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -57,7 +57,7 @@
                         @endforeach
                     </div>
 
-                    {{── Detail harga ──}}
+                    {{-- Detail harga --}}
                     <div class="border-t border-[#FFD1DC]/30 pt-4 space-y-2 text-sm">
                         <div class="flex justify-between text-slate-600">
                             <span>Subtotal Produk</span>
@@ -85,7 +85,7 @@
                     </div>
                 </div>
 
-                {{── Batas Waktu Pembayaran ──}}
+                {{-- Batas Waktu Pembayaran --}}
                 @if ($order->payment?->expired_at)
                     <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
                         <svg class="w-5 h-5 text-amber-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -101,7 +101,7 @@
                     </div>
                 @endif
 
-                {{── Metode Pembayaran Tersedia ──}}
+                {{-- Metode Pembayaran Tersedia --}}
                 <div class="bg-white rounded-2xl border border-[#FFD1DC]/40 shadow-sm p-6">
                     <h2 class="text-base font-black text-gray-800 mb-4 flex items-center gap-2">
                         <svg class="w-5 h-5 text-[#E86FA3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -130,7 +130,7 @@
                     </div>
                 </div>
 
-                {{── Tombol Bayar ──}}
+                {{-- Tombol Bayar --}}
                 <div x-data="paymentHandler()" class="bg-white rounded-2xl border border-[#FFD1DC]/40 shadow-sm p-6">
                     <div x-show="errorMessage" x-text="errorMessage" class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm"></div>
 
