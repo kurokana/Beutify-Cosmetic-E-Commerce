@@ -107,14 +107,14 @@
                                     @endforeach
                                 </div>
 
-                                <a href="{{ route('customer.profile.edit') }}"
+                                <button type="button" @click="openAddAddress()"
                                     class="mt-4 inline-flex items-center gap-1.5 text-sm text-[#E86FA3] hover:text-[#d45a92] font-medium">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 4v16m8-8H4" />
                                     </svg>
                                     Tambah alamat baru
-                                </a>
+                                </button>
                             @else
                                 <div class="text-center py-6 text-slate-400">
                                     <svg class="mx-auto w-10 h-10 text-gray-200 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -122,15 +122,48 @@
                                             d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                     </svg>
                                     <p class="text-sm mb-3">Anda belum memiliki alamat tersimpan.</p>
-                                    <a href="{{ route('customer.profile.edit') }}"
+                                    <button type="button" @click="openAddAddress()"
                                         class="inline-flex items-center gap-1.5 px-4 py-2 bg-[#E86FA3] text-white rounded-lg text-sm font-medium hover:bg-[#d45a92] transition">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                                         </svg>
                                         Tambah Alamat
-                                    </a>
+                                    </button>
                                 </div>
                             @endif
+                        </div>
+
+                        {{-- Add Address Modal (Alpine controlled) --}}
+                        <div x-show="showAddAddressModal" class="fixed inset-0 z-50 flex items-center justify-center" style="display: none;">
+                            <div class="absolute inset-0 bg-black/40" @click="showAddAddressModal = false"></div>
+                            <div class="relative bg-white rounded-xl p-6 w-full max-w-2xl mx-4">
+                                <h3 class="text-lg font-bold mb-3">Tambah Alamat Baru</h3>
+
+                                <div x-show="addAddressError" class="text-sm text-red-600 bg-red-50 border border-red-200 rounded p-3 mb-3" x-text="addAddressError"></div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <input type="text" placeholder="Label (mis. Rumah, Kantor)" x-model="newAddress.label" class="p-2 border rounded">
+                                    <input type="text" placeholder="Nama Penerima" x-model="newAddress.recipient_name" class="p-2 border rounded">
+                                    <input type="text" placeholder="No. HP" x-model="newAddress.phone" class="p-2 border rounded">
+                                    <input type="text" placeholder="Kode Pos" x-model="newAddress.postal_code" class="p-2 border rounded">
+                                    <input type="text" placeholder="Provinsi" x-model="newAddress.province" class="p-2 border rounded md:col-span-2">
+                                    <input type="text" placeholder="Kota" x-model="newAddress.city" class="p-2 border rounded">
+                                    <input type="text" placeholder="Kecamatan" x-model="newAddress.district" class="p-2 border rounded">
+                                    <textarea placeholder="Alamat lengkap" x-model="newAddress.full_address" class="p-2 border rounded md:col-span-2"></textarea>
+                                </div>
+
+                                <div class="flex items-center gap-3 mt-4">
+                                    <label class="inline-flex items-center gap-2"><input type="checkbox" x-model="newAddress.is_default"> Jadikan utama</label>
+                                </div>
+
+                                <div class="flex justify-end gap-3 mt-4">
+                                    <button type="button" @click="showAddAddressModal = false" class="px-4 py-2 border rounded">Batal</button>
+                                    <button type="button" @click="submitNewAddress()" :disabled="addAddressLoading" class="px-4 py-2 bg-[#E86FA3] text-white rounded">
+                                        <span x-show="!addAddressLoading">Simpan</span>
+                                        <span x-show="addAddressLoading">Menyimpan...</span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
 
                         {{-- Pilihan Kurir --}}
@@ -370,6 +403,21 @@
         function checkoutForm() {
             return {
                 selectedAddressId: {{ $addresses->where('is_default', true)->first()?->id ?? $addresses->first()?->id ?? 'null' }},
+                // Add-address modal state
+                showAddAddressModal: false,
+                newAddress: {
+                    label: '',
+                    recipient_name: '',
+                    phone: '',
+                    province: '',
+                    city: '',
+                    district: '',
+                    postal_code: '',
+                    full_address: '',
+                    is_default: false,
+                },
+                addAddressLoading: false,
+                addAddressError: '',
                 courierLoading: false,
                 courierError: '',
                 courierOptions: [],
@@ -399,6 +447,48 @@
                 init() {
                     if (this.selectedAddressId) {
                         this.loadCouriers(this.selectedAddressId);
+                    }
+                },
+
+                openAddAddress() {
+                    this.addAddressError = '';
+                    this.showAddAddressModal = true;
+                },
+
+                async submitNewAddress() {
+                    this.addAddressError = '';
+                    if (this.addAddressLoading) return;
+                    // basic client-side check
+                    if (!this.newAddress.recipient_name || !this.newAddress.phone || !this.newAddress.full_address) {
+                        this.addAddressError = 'Mohon lengkapi nama, nomor telepon, dan alamat lengkap.';
+                        return;
+                    }
+
+                    this.addAddressLoading = true;
+
+                    try {
+                        const response = await fetch('/customer/addresses', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            },
+                            body: JSON.stringify(this.newAddress),
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok && data.success) {
+                            // Refresh to load updated addresses and select the new one
+                            window.location.reload();
+                        } else {
+                            this.addAddressError = data.message || 'Gagal menambahkan alamat.';
+                        }
+                    } catch (err) {
+                        this.addAddressError = 'Tidak dapat menyimpan alamat. Silakan coba lagi.';
+                    } finally {
+                        this.addAddressLoading = false;
                     }
                 },
 

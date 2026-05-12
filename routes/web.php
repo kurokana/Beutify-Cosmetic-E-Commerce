@@ -10,6 +10,7 @@ use App\Http\Controllers\Customer\ProfileController as CustomerProfileController
 use App\Http\Controllers\Customer\ProductController;
 use App\Http\Controllers\Customer\PaymentController;
 use App\Http\Controllers\Customer\ShippingController;
+use App\Http\Controllers\Customer\AddressController;
 use App\Http\Controllers\Customer\ReviewController;
 use App\Http\Controllers\Customer\VoucherController;
 use App\Http\Controllers\Customer\WishlistController;
@@ -33,6 +34,8 @@ Route::middleware(['auth', 'verified'])->prefix('customer')->name('customer.')->
     Route::get('/profile', [CustomerProfileController::class, 'index'])->name('profile.index');
     Route::get('/profile/edit', [CustomerProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [CustomerProfileController::class, 'update'])->name('profile.update');
+    // Addresses: allow creating addresses via AJAX from checkout/profile
+    Route::post('/addresses', [AddressController::class, 'store'])->name('addresses.store');
 });
 
 // Catalog & Search routes (Requirements 2.1, 2.8, 2.9, 2.10, 13.5)
