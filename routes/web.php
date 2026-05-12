@@ -4,6 +4,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\Customer\CheckoutController;
+use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
 use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\ProfileController as CustomerProfileController;
 use App\Http\Controllers\Customer\ProductController;
@@ -18,9 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified', 'redirect.dashboard.by.role'])->name('dashboard');
+Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->middleware(['auth', 'verified', 'redirect.dashboard.by.role'])->name('dashboard');
 
 // Breeze default profile routes (kept for backward compatibility)
 Route::middleware('auth')->group(function () {
