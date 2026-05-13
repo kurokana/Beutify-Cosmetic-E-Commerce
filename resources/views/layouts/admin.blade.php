@@ -16,7 +16,7 @@
 
         @stack('styles')
     </head>
-    <body class="font-sans antialiased bg-gray-100 text-gray-900">
+    <body class="font-sans antialiased bg-[#FFF8FB] text-slate-900">
 
         <div x-data="{ sidebarOpen: false }" class="flex h-screen overflow-hidden">
 
@@ -37,14 +37,27 @@
             {{-- Sidebar --}}
             <aside
                 :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-                class="fixed inset-y-0 left-0 z-30 w-64 bg-gray-900 text-white transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-0 flex flex-col"
+                class="fixed inset-y-0 left-0 z-30 w-64 bg-white text-slate-900 transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-0 flex flex-col shadow-lg border-r border-[#FFD1DC]/30"
                 aria-label="Navigasi admin"
             >
                 {{-- Sidebar Header --}}
-                <div class="flex items-center justify-between h-16 px-6 border-b border-gray-700 flex-shrink-0">
-                    <a href="{{ \Illuminate\Support\Facades\Route::has('admin.dashboard') ? route('admin.dashboard') : '#' }}" class="flex items-center gap-2">
-                        <span class="text-lg font-bold text-pink-400">{{ config('app.name', 'Kosmetik') }}</span>
-                        <span class="text-xs text-gray-400 font-medium">Admin</span>
+                <div class="flex items-center justify-between h-16 px-6 border-b border-[#FFD1DC]/40 flex-shrink-0">
+                    <a href="{{ \Illuminate\Support\Facades\Route::has('admin.dashboard') ? route('admin.dashboard') : '#' }}" class="flex items-center gap-2.5 group">
+                        {{-- Logo Beutify --}}
+                        <div class="relative">
+                            <svg class="w-10 h-10" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="20" cy="15" r="6" fill="#FFD1DC"/>
+                                <circle cx="14" cy="22" r="6" fill="#F8BBD0"/>
+                                <circle cx="26" cy="22" r="6" fill="#F8BBD0"/>
+                                <circle cx="14" cy="22" r="6" fill="#89CFF0" opacity="0.5"/>
+                                <circle cx="26" cy="22" r="6" fill="#89CFF0" opacity="0.5"/>
+                                <circle cx="20" cy="20" r="3" fill="#E86FA3"/>
+                            </svg>
+                        </div>
+                        <div class="leading-tight">
+                            <h2 class="text-sm font-extrabold text-[#E86FA3] group-hover:text-[#D9578F] transition">Beutify</h2>
+                            <p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Admin</p>
+                        </div>
                     </a>
                     <button
                         @click="sidebarOpen = false"
@@ -82,7 +95,7 @@
                                 @if ($routeExists)
                                     <a
                                         href="{{ route($item['route']) }}"
-                                        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors {{ $isActive ? 'bg-pink-600 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white' }}"
+                                        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors {{ $isActive ? 'bg-[#E86FA3] text-white' : 'text-slate-600 hover:bg-[#FFF0F6] hover:text-[#E86FA3]' }}"
                                         aria-current="{{ $isActive ? 'page' : 'false' }}"
                                     >
                                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -118,11 +131,11 @@
             <div class="flex-1 flex flex-col overflow-hidden">
 
                 {{-- Top Header Bar --}}
-                <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4 sm:px-6 flex-shrink-0">
+                <header class="bg-white border-b border-[#FFD1DC]/40 h-16 flex items-center justify-between px-4 sm:px-6 flex-shrink-0">
                     {{-- Mobile: Hamburger --}}
                     <button
                         @click="sidebarOpen = true"
-                        class="lg:hidden p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-pink-400"
+                        class="lg:hidden p-2 rounded-md text-slate-500 hover:text-slate-700 hover:bg-[#FFF0F6] transition-colors focus:outline-none focus:ring-2 focus:ring-[#E86FA3]"
                         aria-label="Buka sidebar"
                     >
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -147,7 +160,7 @@
                         <div class="relative" x-data="{ open: false }" @click.outside="open = false">
                             <button
                                 @click="open = !open"
-                                class="w-9 h-9 bg-pink-100 rounded-full flex items-center justify-center hover:bg-pink-200 transition-colors focus:outline-none focus:ring-2 focus:ring-pink-400"
+                                class="w-9 h-9 bg-gradient-to-br from-[#F8BBD0] to-[#89CFF0] rounded-full flex items-center justify-center hover:from-[#F8A0C2] hover:to-[#7CC1F7] transition-colors focus:outline-none focus:ring-2 focus:ring-[#E86FA3]"
                                 aria-haspopup="true"
                                 :aria-expanded="open"
                                 aria-label="Menu akun admin"
