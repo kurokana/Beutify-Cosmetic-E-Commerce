@@ -24,7 +24,7 @@
                         name="search"
                         value="{{ request('search') }}"
                         placeholder="Cari nama atau email..."
-                        class="w-full rounded-lg border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500"
+                        class="w-full rounded-lg border-gray-300 shadow-sm focus:border-[#E86FA3] focus:ring-[#BDEBFF]"
                     >
                 </div>
 
@@ -52,7 +52,7 @@
                 <div class="md:col-span-3 flex gap-2">
                     <button
                         type="submit"
-                        class="inline-flex items-center px-4 py-2 bg-pink-600 text-white text-sm font-medium rounded-lg hover:bg-pink-700 transition-colors focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2"
+                        class="inline-flex items-center px-4 py-2 bg-[#E86FA3] text-white text-sm font-medium rounded-lg hover:bg-[#D9578F] transition-colors focus:outline-none focus:ring-2 focus:ring-[#E86FA3] focus:ring-offset-2"
                     >
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -61,7 +61,7 @@
                     </button>
                     <a
                         href="{{ route('admin.users.index') }}"
-                        class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-300 transition-colors"
+                        class="inline-flex items-center px-4 py-2 bg-[#FFF8FB] text-[#475569] text-sm font-medium rounded-lg hover:bg-[#FFF0F6] transition-colors"
                     >
                         Reset
                     </a>
@@ -97,12 +97,12 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @forelse ($users as $user)
-                            <tr class="hover:bg-gray-50 transition-colors">
+                            <tr class="hover:bg-[#FFF0F6] transition-colors">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <div class="flex-shrink-0 h-10 w-10">
-                                            <div class="h-10 w-10 rounded-full bg-pink-100 flex items-center justify-center">
-                                                <span class="text-pink-600 font-medium text-sm">
+                                            <div class="h-10 w-10 rounded-full bg-[#FFD1DC] flex items-center justify-center">
+                                                <span class="text-[#E86FA3] font-medium text-sm">
                                                     {{ strtoupper(substr($user->name, 0, 2)) }}
                                                 </span>
                                             </div>
@@ -173,7 +173,7 @@
                                         @method('PATCH')
                                         <button
                                             type="submit"
-                                            class="text-pink-600 hover:text-pink-900 transition-colors"
+                                            class="text-[#E86FA3] hover:text-[#D9578F] transition-colors"
                                             title="{{ $user->is_active ? 'Nonaktifkan' : 'Aktifkan' }} Akun"
                                         >
                                             @if ($user->is_active)
