@@ -13,7 +13,7 @@
             </div>
         </div>
 
-        <div class="grid gap-6 xl:grid-cols-[1.4fr_0.85fr]">
+        <div class="grid gap-6 xl:grid-cols-[2fr_1fr]">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {{-- Total Produk --}}
                 <div class="bg-white rounded-3xl border border-[#FFD1DC]/60 p-6 shadow-sm">
@@ -80,48 +80,66 @@
                 </div>
             </div>
 
-            <div class="space-y-6">
-                <div class="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm">
-                    <h2 class="text-lg font-semibold text-slate-900">Ringkasan Toko</h2>
-                    <p class="mt-3 text-sm text-slate-500">Semua kebutuhan manajemen toko ada di sini. Gunakan akses cepat untuk langsung menuju fitur penting.</p>
-
-                    <div class="mt-6 grid gap-4">
-                        <div class="flex items-center gap-4 rounded-3xl bg-[#FEF3C7] p-4">
-                            <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-[#FDE68A]/70 text-[#92400E]">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 6h18M3 14h18M3 18h18"/>
-                                </svg>
-                            </span>
-                            <div>
-                                <p class="text-sm font-semibold text-slate-900">Status operasional</p>
-                                <p class="text-sm text-slate-500">Semua sistem toko berjalan normal saat ini.</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4 rounded-3xl bg-[#ECFDF5] p-4">
-                            <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-[#A7F3D0]/70 text-[#047857]">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
-                                </svg>
-                            </span>
-                            <div>
-                                <p class="text-sm font-semibold text-slate-900">Promosi dan voucher</p>
-                                <p class="text-sm text-slate-500">Cek voucher terbaru untuk dorong penjualan.</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4 rounded-3xl bg-[#EFF6FF] p-4">
-                            <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-[#BFDBFE]/70 text-[#1D4ED8]">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
-                                </svg>
-                            </span>
-                            <div>
-                                <p class="text-sm font-semibold text-slate-900">Kinerja toko</p>
-                                <p class="text-sm text-slate-500">Lihat ringkasan dan pastikan semua indikator berjalan baik.</p>
-                            </div>
-                        </div>
-                    </div>
+            <div class="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm h-full">
+                <div class="mb-6">
+                    <h2 class="text-lg font-semibold text-slate-900">Notifikasi Pesanan Masuk</h2>
+                    <p class="mt-1 text-sm text-slate-500">Pesanan baru dari pelanggan yang masuk ke admin panel.</p>
                 </div>
 
+                <div class="space-y-4 overflow-y-auto max-h-[340px] pr-2 scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100">
+                    @forelse ($recentOrders as $order)
+                        <a href="{{ route('admin.orders.show', $order) }}" class="block rounded-3xl bg-[#F8FAFC] p-4 transition hover:bg-[#eef4fb] focus:outline-none focus:ring-2 focus:ring-[#D15788]">
+                            <div class="flex items-start justify-between gap-3">
+                                <div class="min-w-0">
+                                    <p class="text-sm font-semibold text-slate-900">Pesanan #{{ $order->order_number ?? $order->id }}</p>
+                                    <p class="mt-1 text-sm text-slate-500">Dipesan oleh {{ $order->user->name ?? 'Pengguna' }} • Total Rp {{ number_format($order->total_amount, 0, ',', '.') }}</p>
+                                </div>
+                                <span class="text-xs text-slate-400">{{ $order->created_at->diffForHumans() }}</span>
+                            </div>
+                        </a>
+                    @empty
+                        <p class="text-sm text-slate-500">Belum ada notifikasi pesanan masuk.</p>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                <div>
+                    <h2 class="text-lg font-semibold text-slate-900">Pesanan Terbaru</h2>
+                    <p class="mt-1 text-sm text-slate-500">Lima pesanan terakhir pada toko kamu.</p>
+                </div>
+                <a href="{{ route('admin.orders.index') }}" class="text-sm font-medium text-[#BE185D] hover:text-[#D15788]">Lihat semua</a>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-sm text-left">
+                    <thead class="bg-slate-50 text-slate-600 uppercase text-xs tracking-[0.2em]">
+                        <tr>
+                            <th class="px-4 py-3">#</th>
+                            <th class="px-4 py-3">Pelanggan</th>
+                            <th class="px-4 py-3">Total</th>
+                            <th class="px-4 py-3">Status</th>
+                            <th class="px-4 py-3">Tanggal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($recentOrders as $order)
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="px-4 py-4 font-medium text-slate-900">{{ $order->order_number ?? $order->id }}</td>
+                                <td class="px-4 py-4 text-slate-600">{{ $order->user->name ?? '-' }}</td>
+                                <td class="px-4 py-4 text-slate-600">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</td>
+                                <td class="px-4 py-4 text-slate-600">{{ ucfirst(str_replace('_', ' ', $order->status)) }}</td>
+                                <td class="px-4 py-4 text-slate-600">{{ $order->created_at->format('d M Y') }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="px-4 py-8 text-center text-sm text-slate-500">Tidak ada pesanan terbaru untuk ditampilkan.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
