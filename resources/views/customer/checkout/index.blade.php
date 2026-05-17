@@ -103,6 +103,28 @@
                                                     {{ $address->postal_code }}
                                                 </p>
                                             </div>
+                                            <div class="flex gap-2 ml-2">
+                                                <button
+                                                    type="button"
+                                                    @click.stop="openEditAddress({{ $address }})"
+                                                    class="p-2 text-[#E86FA3] hover:bg-[#FFE4EC] rounded-lg transition"
+                                                    title="Edit alamat"
+                                                >
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                    </svg>
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    @click.stop="deleteAddress({{ $address->id }})"
+                                                    class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition"
+                                                    title="Hapus alamat"
+                                                >
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                </button>
+                                            </div>
                                         </label>
                                     @endforeach
                                 </div>
@@ -136,7 +158,7 @@
                         {{-- Add Address Modal (Alpine controlled) --}}
                         <div x-show="showAddAddressModal" class="fixed inset-0 z-50 flex items-center justify-center" style="display: none;">
                             <div class="absolute inset-0 bg-black/40" @click="showAddAddressModal = false"></div>
-                            <div class="relative bg-white rounded-xl p-6 w-full max-w-2xl mx-4">
+                            <div class="relative bg-white rounded-xl p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
                                 <h3 class="text-lg font-bold mb-3">Tambah Alamat Baru</h3>
 
                                 <div x-show="addAddressError" class="text-sm text-red-600 bg-red-50 border border-red-200 rounded p-3 mb-3" x-text="addAddressError"></div>
@@ -190,6 +212,65 @@
                                     <button type="button" @click="submitNewAddress()" :disabled="addAddressLoading" class="px-4 py-2 bg-[#E86FA3] text-white rounded">
                                         <span x-show="!addAddressLoading">Simpan</span>
                                         <span x-show="addAddressLoading">Menyimpan...</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Edit Address Modal (Alpine controlled) --}}
+                        <div x-show="showEditAddressModal" class="fixed inset-0 z-50 flex items-center justify-center" style="display: none;">
+                            <div class="absolute inset-0 bg-black/40" @click="showEditAddressModal = false"></div>
+                            <div class="relative bg-white rounded-xl p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+                                <h3 class="text-lg font-bold mb-3">Edit Alamat</h3>
+
+                                <div x-show="editAddressError" class="text-sm text-red-600 bg-red-50 border border-red-200 rounded p-3 mb-3" x-text="editAddressError"></div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <input type="text" placeholder="Label (mis. Rumah, Kantor)" x-model="editAddress.label" class="p-2 border rounded">
+                                    <input type="text" placeholder="Nama Penerima" x-model="editAddress.recipient_name" class="p-2 border rounded">
+                                    <input type="text" placeholder="No. HP" x-model="editAddress.phone" class="p-2 border rounded">
+
+                                    <select x-model="editAddress.province_id" @change="onProvinceChangeEdit()"
+                                        class="p-2 border rounded md:col-span-2">
+                                        <option value="">Pilih Provinsi</option>
+                                        <template x-for="prov in provinces" :key="prov.province_id">
+                                            <option :value="prov.province_id" x-text="prov.province"></option>
+                                        </template>
+                                    </select>
+
+                                    <select x-model="editAddress.city_id" @change="onCityChangeEdit()" class="p-2 border rounded">
+                                        <option value="">Pilih Kota / Kabupaten</option>
+                                        <template x-for="city in editCities" :key="city.city_id">
+                                            <option :value="city.city_id" :data-type="city.type" x-text="city.type + ' ' + city.city_name"></option>
+                                        </template>
+                                    </select>
+
+                                    <select x-model="editAddress.district_id" @change="onDistrictChangeEdit($event)" class="p-2 border rounded">
+                                        <option value="">Pilih Kecamatan</option>
+                                        <template x-for="sub in editSubdistricts" :key="sub.subdistrict_id">
+                                            <option :value="sub.subdistrict_id" :data-postal="sub.postal_code" :data-name="sub.subdistrict_name" x-text="sub.subdistrict_name"></option>
+                                        </template>
+                                    </select>
+
+                                    <select x-model="editAddress.postal_code" class="p-2 border rounded">
+                                        <option value="">Pilih Kode Pos</option>
+                                        <template x-for="postal in editPostalCodes" :key="postal">
+                                            <option :value="postal" x-text="postal"></option>
+                                        </template>
+                                    </select>
+
+                                    <textarea placeholder="Alamat lengkap" x-model="editAddress.full_address" class="p-2 border rounded md:col-span-2"></textarea>
+                                </div>
+
+                                <div class="flex items-center gap-3 mt-4">
+                                    <label class="inline-flex items-center gap-2"><input type="checkbox" x-model="editAddress.is_default"> Jadikan utama</label>
+                                </div>
+
+                                <div class="flex justify-end gap-3 mt-4">
+                                    <button type="button" @click="showEditAddressModal = false" class="px-4 py-2 border rounded">Batal</button>
+                                    <button type="button" @click="submitEditAddress()" :disabled="editAddressLoading" class="px-4 py-2 bg-[#E86FA3] text-white rounded">
+                                        <span x-show="!editAddressLoading">Perbarui</span>
+                                        <span x-show="editAddressLoading">Memperbarui...</span>
                                     </button>
                                 </div>
                             </div>
@@ -456,6 +537,30 @@
                 addAddressError: '',
                 postalLoading: false,
                 postalError: '',
+                
+                // Edit-address modal state
+                showEditAddressModal: false,
+                editAddressId: null,
+                editAddress: {
+                    label: '',
+                    recipient_name: '',
+                    phone: '',
+                    province_id: '',
+                    province: '',
+                    city_id: '',
+                    city: '',
+                    district_id: '',
+                    district: '',
+                    postal_code: '',
+                    full_address: '',
+                    is_default: false,
+                },
+                editCities: [],
+                editSubdistricts: [],
+                editPostalCodes: [],
+                editAddressLoading: false,
+                editAddressError: '',
+                
                 courierLoading: false,
                 courierError: '',
                 courierOptions: [],
@@ -493,6 +598,105 @@
                     this.showAddAddressModal = true;
                     if (!this.provinces.length) {
                         this.loadProvinces();
+                    }
+                },
+
+                openEditAddress(address) {
+                    this.editAddressError = '';
+                    this.editAddressId = address.id;
+                    this.editAddress = {
+                        label: address.label || '',
+                        recipient_name: address.recipient_name,
+                        phone: address.phone,
+                        province_id: address.province_id || '',
+                        province: address.province,
+                        city_id: address.city_id || '',
+                        city: address.city,
+                        district_id: address.district_id || '',
+                        district: address.district,
+                        postal_code: address.postal_code,
+                        full_address: address.full_address,
+                        is_default: address.is_default,
+                    };
+                    this.showEditAddressModal = true;
+                    if (!this.provinces.length) {
+                        this.loadProvinces().then(() => this.onProvinceChangeEdit());
+                    } else {
+                        this.onProvinceChangeEdit();
+                    }
+                },
+
+                async submitEditAddress() {
+                    this.editAddressError = '';
+                    if (this.editAddressLoading) return;
+                    if (!this.editAddress.recipient_name || !this.editAddress.phone || !this.editAddress.full_address) {
+                        this.editAddressError = 'Mohon lengkapi nama, nomor telepon, dan alamat lengkap.';
+                        return;
+                    }
+
+                    this.editAddressLoading = true;
+
+                    try {
+                        const payload = {
+                            label: this.editAddress.label,
+                            recipient_name: this.editAddress.recipient_name,
+                            phone: this.editAddress.phone,
+                            province_id: this.editAddress.province_id || null,
+                            province: this.editAddress.province || '',
+                            city_id: this.editAddress.city_id || null,
+                            city: this.editAddress.city || '',
+                            district_id: this.editAddress.district_id || null,
+                            district: this.editAddress.district || '',
+                            postal_code: this.editAddress.postal_code,
+                            full_address: this.editAddress.full_address,
+                            is_default: this.editAddress.is_default ? 1 : 0,
+                        };
+
+                        const response = await fetch(`/customer/addresses/${this.editAddressId}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            },
+                            body: JSON.stringify(payload),
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok && data.success) {
+                            window.location.reload();
+                        } else {
+                            this.editAddressError = data.message || 'Gagal memperbarui alamat.';
+                        }
+                    } catch (err) {
+                        this.editAddressError = 'Tidak dapat memperbarui alamat. Silakan coba lagi.';
+                    } finally {
+                        this.editAddressLoading = false;
+                    }
+                },
+
+                async deleteAddress(addressId) {
+                    if (!confirm('Apakah Anda yakin ingin menghapus alamat ini?')) return;
+
+                    try {
+                        const response = await fetch(`/customer/addresses/${addressId}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            },
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok && data.success) {
+                            window.location.reload();
+                        } else {
+                            alert(data.message || 'Gagal menghapus alamat.');
+                        }
+                    } catch (err) {
+                        alert('Tidak dapat menghapus alamat. Silakan coba lagi.');
                     }
                 },
 
@@ -581,6 +785,27 @@
                     } catch (e) {}
                 },
 
+                async onProvinceChangeEdit() {
+                    this.editCities = [];
+                    this.editSubdistricts = [];
+                    this.editAddress.province = '';
+                    this.editAddress.city_id = '';
+                    this.editAddress.city = '';
+                    this.editAddress.district_id = '';
+                    this.editAddress.district = '';
+                    this.editAddress.postal_code = '';
+                    if (!this.editAddress.province_id) return;
+                    try {
+                        const res = await fetch(`/customer/rajaongkir/cities?province_id=${this.editAddress.province_id}`, { headers: { Accept: 'application/json' } });
+                        const data = await res.json();
+                        if (res.ok && data.success) {
+                            this.editCities = data.data;
+                            const selected = this.provinces.find(p => String(p.province_id) === String(this.editAddress.province_id));
+                            this.editAddress.province = selected ? selected.province : '';
+                        }
+                    } catch (e) {}
+                },
+
                 async onCityChange() {
                     this.subdistricts = [];
                     this.postalCodes = [];
@@ -596,6 +821,25 @@
                             this.subdistricts = data.data;
                             const selected = this.cities.find(c => String(c.city_id) === String(this.newAddress.city_id));
                             this.newAddress.city = selected ? (selected.type + ' ' + selected.city_name) : '';
+                        }
+                    } catch (e) {}
+                },
+
+                async onCityChangeEdit() {
+                    this.editSubdistricts = [];
+                    this.editPostalCodes = [];
+                    this.editAddress.city = '';
+                    this.editAddress.district_id = '';
+                    this.editAddress.district = '';
+                    this.editAddress.postal_code = '';
+                    if (!this.editAddress.city_id) return;
+                    try {
+                        const res = await fetch(`/customer/rajaongkir/subdistricts?city_id=${this.editAddress.city_id}`, { headers: { Accept: 'application/json' } });
+                        const data = await res.json();
+                        if (res.ok && data.success) {
+                            this.editSubdistricts = data.data;
+                            const selected = this.editCities.find(c => String(c.city_id) === String(this.editAddress.city_id));
+                            this.editAddress.city = selected ? (selected.type + ' ' + selected.city_name) : '';
                         }
                     } catch (e) {}
                 },

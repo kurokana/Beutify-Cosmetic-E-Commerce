@@ -35,8 +35,10 @@ Route::middleware(['auth', 'verified'])->prefix('customer')->name('customer.')->
     Route::get('/profile', [CustomerProfileController::class, 'index'])->name('profile.index');
     Route::get('/profile/edit', [CustomerProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [CustomerProfileController::class, 'update'])->name('profile.update');
-    // Addresses: allow creating addresses via AJAX from checkout/profile
+    // Addresses: allow creating, updating, and deleting addresses via AJAX from checkout/profile
     Route::post('/addresses', [AddressController::class, 'store'])->name('addresses.store');
+    Route::put('/addresses/{address}', [AddressController::class, 'update'])->name('addresses.update');
+    Route::delete('/addresses/{address}', [AddressController::class, 'destroy'])->name('addresses.destroy');
     // RajaOngkir helper endpoints for dropdowns
     Route::get('/rajaongkir/provinces', [RajaOngkirController::class, 'provinces'])->name('rajaongkir.provinces');
     Route::get('/rajaongkir/cities', [RajaOngkirController::class, 'cities'])->name('rajaongkir.cities');
