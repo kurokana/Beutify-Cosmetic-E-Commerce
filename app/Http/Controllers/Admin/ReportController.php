@@ -36,12 +36,18 @@ class ReportController extends Controller
         // Summary statistics
         $summary = $this->getSummaryStatistics($startDate, $endDate);
 
+        // Money and product flow ratios (in/out)
+        $moneyFlow = $this->getMoneyFlow($startDate, $endDate);
+        $productFlow = $this->getProductFlow($startDate, $endDate);
+
         return view('admin.reports.index', compact(
             'dailySales',
             'weeklySales',
             'monthlySales',
             'bestSellingProducts',
             'summary',
+            'moneyFlow',
+            'productFlow',
             'startDate',
             'endDate'
         ));
@@ -217,11 +223,23 @@ class ReportController extends Controller
         ])
             ->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59']);
 
+        $refundOrders = Order::where('status', 'cancelled')
+            ->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
+            ->whereHas('payment', function ($query) {
+                $query->where('status', 'success');
+            })
+            ->with('payment');
+
+        $moneyIn = $orders->sum('total_amount');
+        $moneyOut = $refundOrders->get()->sum(function (Order $order) {
+            $paymentAmount = $order->payment?->amount ?? 0;
+            return (float) $paymentAmount + (float) $order->shipping_cost;
+        });
+
         return [
-            'total_orders' => $orders->count(),
-            'total_revenue' => $orders->sum('total_amount'),
-            'average_order_value' => $orders->count() > 0 ? $orders->sum('total_amount') / $orders->count() : 0,
-            'total_products_sold' => OrderItem::whereHas('order', function ($query) use ($startDate, $endDate) {
+            'money_in' => $moneyIn,
+            'money_out' => $moneyOut,
+            'products_out' => OrderItem::whereHas('order', function ($query) use ($startDate, $endDate) {
                 $query->whereIn('status', [
                     'payment_confirmed',
                     'processing',
@@ -230,6 +248,75 @@ class ReportController extends Controller
                 ])
                     ->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59']);
             })->sum('quantity'),
+            'products_in' => OrderItem::whereHas('order', function ($query) use ($startDate, $endDate) {
+                $query->where('status', 'cancelled')
+                    ->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
+                    ->whereHas('payment', function ($paymentQuery) {
+                        $paymentQuery->where('status', 'success');
+                    });
+            })->sum('quantity'),
+        ];
+    }
+
+    /**
+     * Get money flow (in/out) for the date range.
+     */
+    private function getMoneyFlow(string $startDate, string $endDate): array
+    {
+        $moneyIn = Order::whereIn('status', [
+            'payment_confirmed',
+            'processing',
+            'shipped',
+            'delivered',
+        ])
+            ->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
+            ->sum('total_amount');
+
+        $refundOrders = Order::where('status', 'cancelled')
+            ->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
+            ->whereHas('payment', function ($query) {
+                $query->where('status', 'success');
+            })
+            ->with('payment')
+            ->get();
+
+        $moneyOut = $refundOrders->sum(function (Order $order) {
+            $paymentAmount = $order->payment?->amount ?? 0;
+            return (float) $paymentAmount + (float) $order->shipping_cost;
+        });
+
+        return [
+            'in' => $moneyIn,
+            'out' => $moneyOut,
+        ];
+    }
+
+    /**
+     * Get product flow (out/in) for the date range.
+     */
+    private function getProductFlow(string $startDate, string $endDate): array
+    {
+        $productsOut = OrderItem::whereHas('order', function ($query) use ($startDate, $endDate) {
+            $query->whereIn('status', [
+                'payment_confirmed',
+                'processing',
+                'shipped',
+                'delivered',
+            ])
+                ->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59']);
+        })->sum('quantity');
+
+        $productsIn = OrderItem::whereHas('order', function ($query) use ($startDate, $endDate) {
+            $query->where('status', 'cancelled')
+                ->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
+                ->whereHas('payment', function ($paymentQuery) {
+                    $paymentQuery->where('status', 'success');
+                });
+        })->sum('quantity');
+
+        return [
+            'out' => $productsOut,
+            'in' => $productsIn,
         ];
     }
 }
