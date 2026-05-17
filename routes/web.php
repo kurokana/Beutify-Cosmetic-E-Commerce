@@ -79,6 +79,7 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/payment/{order}', [PaymentController::class, 'show'])->name('payment.show');
     Route::post('/payment/create/{order}', [PaymentController::class, 'create'])->name('payment.create');
+    Route::post('/payment/refresh/{order}', [PaymentController::class, 'refresh'])->name('payment.refresh');
 });
 
 // Order history & detail routes — protected by auth + verified (Requirements 5.9)
@@ -86,6 +87,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::patch('/orders/{order}/confirm', [OrderController::class, 'confirm'])->name('orders.confirm');
+    Route::post('/orders/{order}/refund', [OrderController::class, 'requestRefund'])->name('orders.refund');
     Route::get('/orders/{order}/track', [OrderController::class, 'track'])->name('orders.track');
 });
 

@@ -56,22 +56,43 @@ class ShippingService
         }
 
         $allOptions = [];
+        $missingCouriers = [];
 
         foreach ($this->supportedCouriers as $courier) {
-            try {
-                $options = $this->getShippingOptionsForCourier(
-                    $this->originCityId,
-                    $destinationCityId,
-                    $weight,
-                    $courier
-                );
+            $cacheKey = $this->buildCacheKey($this->originCityId, $destinationCityId, $weight, $courier);
+            $cached = Cache::get($cacheKey);
+
+            if (is_array($cached)) {
+                $allOptions = array_merge($allOptions, $cached);
+                continue;
+            }
+
+            $missingCouriers[] = $courier;
+        }
+
+        if (! empty($missingCouriers)) {
+            $responses = $this->client->getCostBatch(
+                $this->originCityId,
+                $destinationCityId,
+                $weight,
+                $missingCouriers
+            );
+
+            foreach ($missingCouriers as $courier) {
+                $response = $responses[$courier] ?? null;
+
+                if (! is_array($response)) {
+                    \Log::warning("Failed to get shipping cost for courier {$courier}", [
+                        'error' => 'API error',
+                    ]);
+                    continue;
+                }
+
+                $options = $this->parseShippingResponse($response, $courier);
+                $cacheKey = $this->buildCacheKey($this->originCityId, $destinationCityId, $weight, $courier);
+                Cache::put($cacheKey, $options, now()->addMinutes($this->cacheDuration));
 
                 $allOptions = array_merge($allOptions, $options);
-            } catch (\Exception $e) {
-                // Log error but continue with other couriers
-                \Log::warning("Failed to get shipping cost for courier {$courier}", [
-                    'error' => $e->getMessage(),
-                ]);
             }
         }
 
@@ -106,7 +127,7 @@ class ShippingService
         string $courier
     ): array {
         // Cache key based on origin, destination, weight, and courier
-        $cacheKey = "shipping_cost:{$origin}:{$destination}:{$weight}:{$courier}";
+        $cacheKey = $this->buildCacheKey($origin, $destination, $weight, $courier);
 
         return Cache::remember($cacheKey, now()->addMinutes($this->cacheDuration), function () use (
             $origin,
@@ -118,6 +139,11 @@ class ShippingService
 
             return $this->parseShippingResponse($response, $courier);
         });
+    }
+
+    private function buildCacheKey(int $origin, int $destination, int $weight, string $courier): string
+    {
+        return "shipping_cost:{$origin}:{$destination}:{$weight}:{$courier}";
     }
 
     /**

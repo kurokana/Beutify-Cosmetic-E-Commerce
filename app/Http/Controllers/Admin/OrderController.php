@@ -96,10 +96,14 @@ class OrderController extends Controller
         $oldStatus = $order->status;
         $newStatus = $validated['status'];
 
+        $updateData = ['status' => $newStatus];
+
+        if ($newStatus === 'delivered' && ! $order->delivered_at) {
+            $updateData['delivered_at'] = now();
+        }
+
         // Update the order status
-        $order->update([
-            'status' => $newStatus,
-        ]);
+        $order->update($updateData);
 
         // Dispatch email notification job when status changes
         if ($oldStatus !== $newStatus) {

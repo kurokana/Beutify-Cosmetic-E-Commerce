@@ -151,6 +151,11 @@
                         Pembayaran diproses secara aman melalui Midtrans
                     </p>
 
+                    <button type="button" @click="refresh" :disabled="loading"
+                        class="mt-3 w-full py-3 border border-[#FFD1DC] text-gray-700 rounded-xl font-semibold text-sm hover:bg-gray-50 hover:border-[#E86FA3] transition disabled:opacity-60 disabled:cursor-not-allowed">
+                        Ganti Metode Pembayaran
+                    </button>
+
                     <a href="{{ route('orders.show', $order->id) }}"
                         class="mt-3 block w-full py-2.5 border border-[#FFD1DC] text-gray-700 rounded-xl font-medium text-center text-sm hover:bg-gray-50 hover:border-[#E86FA3] transition">
                         Kembali ke Detail Pesanan
@@ -169,17 +174,21 @@
                 loading: false,
                 errorMessage: '',
                 snapToken: @json($order->payment?->snap_token),
+                snapExpired: @json($order->payment?->expired_at?->isPast() ?? false),
 
                 async pay() {
                     this.errorMessage = '';
                     this.loading = true;
 
                     try {
-                        if (this.snapToken) {
+                        if (this.snapToken && !this.snapExpired) {
                             this.loading = false;
                             this.openSnap(this.snapToken);
                             return;
                         }
+
+                        this.snapToken = null;
+                        this.snapExpired = false;
 
                         const response = await fetch(
                             '{{ route('payment.create', $order->id) }}',
@@ -203,6 +212,40 @@
                         this.snapToken = data.snap_token;
                         this.openSnap(data.snap_token);
 
+                    } catch (err) {
+                        this.errorMessage = 'Tidak dapat terhubung ke server. Silakan coba lagi.';
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+
+                async refresh() {
+                    this.errorMessage = '';
+                    this.loading = true;
+
+                    try {
+                        const response = await fetch(
+                            '{{ route('payment.refresh', $order->id) }}',
+                            {
+                                method: 'POST',
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                },
+                            }
+                        );
+
+                        const data = await response.json();
+
+                        if (!response.ok || !data.success) {
+                            this.errorMessage = data.message || 'Gagal memperbarui metode pembayaran.';
+                            return;
+                        }
+
+                        this.snapToken = data.snap_token;
+                        this.snapExpired = false;
+                        this.openSnap(data.snap_token);
                     } catch (err) {
                         this.errorMessage = 'Tidak dapat terhubung ke server. Silakan coba lagi.';
                     } finally {

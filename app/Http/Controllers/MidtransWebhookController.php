@@ -62,6 +62,15 @@ class MidtransWebhookController extends Controller
         // Determine the new status based on transaction_status (Requirements 5.6, 5.7)
         $newPaymentStatus = $this->mapTransactionStatus($transactionStatus, $fraudStatus);
 
+        if ($payment->status === 'success' && $newPaymentStatus !== 'success') {
+            Log::info("Skipping payment status downgrade for order: {$orderId}", [
+                'current_status' => $payment->status,
+                'incoming_status' => $newPaymentStatus,
+            ]);
+
+            return response()->json(['status' => 'success']);
+        }
+
         // Update payment and order status in a transaction
         DB::transaction(function () use ($payment, $order, $newPaymentStatus, $transactionId, $paymentType) {
             // Update payment record
