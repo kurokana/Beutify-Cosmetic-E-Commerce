@@ -16,6 +16,8 @@ class RajaOngkirClient
 {
     private string $apiKey;
     private string $baseUrl;
+    private float $timeoutSeconds = 1.6;
+    private int $connectTimeoutSeconds = 1;
 
     public function __construct()
     {
@@ -39,7 +41,11 @@ class RajaOngkirClient
         try {
             $response = Http::withHeaders([
                 'key' => $this->apiKey,
-            ])->asForm()->post("{$this->baseUrl}/cost", [
+            ])
+                ->timeout($this->timeoutSeconds)
+                ->connectTimeout($this->connectTimeoutSeconds)
+                ->asForm()
+                ->post("{$this->baseUrl}/cost", [
                 'origin'      => $origin,
                 'destination' => $destination,
                 'weight'      => $weight,
@@ -97,7 +103,11 @@ class RajaOngkirClient
         try {
             $response = Http::withHeaders([
                 'key' => $this->apiKey,
-            ])->asForm()->post("{$this->baseUrl}/waybill", [
+            ])
+                ->timeout($this->timeoutSeconds)
+                ->connectTimeout($this->connectTimeoutSeconds)
+                ->asForm()
+                ->post("{$this->baseUrl}/waybill", [
                 'waybill' => $waybill,
                 'courier' => $courier,
             ]);
@@ -147,7 +157,10 @@ class RajaOngkirClient
      */
     public function getProvinces(): array
     {
-        $response = Http::withHeaders(['key' => $this->apiKey])->get("{$this->baseUrl}/province");
+        $response = Http::withHeaders(['key' => $this->apiKey])
+            ->timeout($this->timeoutSeconds)
+            ->connectTimeout($this->connectTimeoutSeconds)
+            ->get("{$this->baseUrl}/province");
 
         if ($response->failed()) {
             Log::error('RajaOngkir provinces error', ['status' => $response->status(), 'body' => $response->body()]);
@@ -168,7 +181,10 @@ class RajaOngkirClient
      */
     public function getCities($provinceId): array
     {
-        $response = Http::withHeaders(['key' => $this->apiKey])->get("{$this->baseUrl}/city", ['province' => $provinceId]);
+        $response = Http::withHeaders(['key' => $this->apiKey])
+            ->timeout($this->timeoutSeconds)
+            ->connectTimeout($this->connectTimeoutSeconds)
+            ->get("{$this->baseUrl}/city", ['province' => $provinceId]);
 
         if ($response->failed()) {
             Log::error('RajaOngkir cities error', ['status' => $response->status(), 'body' => $response->body()]);
@@ -192,7 +208,10 @@ class RajaOngkirClient
     {
         // Some RajaOngkir plans support /subdistrict endpoint
         try {
-            $response = Http::withHeaders(['key' => $this->apiKey])->get("{$this->baseUrl}/subdistrict", ['city' => $cityId]);
+            $response = Http::withHeaders(['key' => $this->apiKey])
+                ->timeout($this->timeoutSeconds)
+                ->connectTimeout($this->connectTimeoutSeconds)
+                ->get("{$this->baseUrl}/subdistrict", ['city' => $cityId]);
 
             if ($response->failed()) {
                 Log::warning('RajaOngkir subdistricts API failed', ['status' => $response->status(), 'body' => $response->body()]);
@@ -206,5 +225,77 @@ class RajaOngkirClient
             Log::warning('RajaOngkir subdistricts exception', ['message' => $e->getMessage()]);
             return [];
         }
+    }
+
+    /**
+     * Get shipping costs for multiple couriers in parallel.
+     *
+     * @param int $origin
+     * @param int $destination
+     * @param int $weight
+     * @param array $couriers
+     * @return array<string, array|null>
+     */
+    public function getCostBatch(int $origin, int $destination, int $weight, array $couriers): array
+    {
+        $responses = Http::pool(function ($pool) use ($origin, $destination, $weight, $couriers) {
+            $requests = [];
+
+            foreach ($couriers as $courier) {
+                $requests[$courier] = $pool->withHeaders([
+                    'key' => $this->apiKey,
+                ])
+                    ->timeout($this->timeoutSeconds)
+                    ->connectTimeout($this->connectTimeoutSeconds)
+                    ->asForm()
+                    ->post("{$this->baseUrl}/cost", [
+                        'origin'      => $origin,
+                        'destination' => $destination,
+                        'weight'      => $weight,
+                        'courier'     => $courier,
+                    ]);
+            }
+
+            return $requests;
+        });
+
+        $results = [];
+
+        foreach ($responses as $courier => $response) {
+            if ($response instanceof \Throwable) {
+                Log::error('RajaOngkir API error', [
+                    'courier' => $courier,
+                    'message' => $response->getMessage(),
+                ]);
+                $results[$courier] = null;
+                continue;
+            }
+
+            if (! $response || $response->failed()) {
+                Log::error('RajaOngkir API error', [
+                    'courier' => $courier,
+                    'status' => $response?->status(),
+                    'response' => $response?->body(),
+                ]);
+                $results[$courier] = null;
+                continue;
+            }
+
+            $data = $response->json();
+
+            if (isset($data['rajaongkir']['status']['code']) && $data['rajaongkir']['status']['code'] !== 200) {
+                Log::error('RajaOngkir API returned error', [
+                    'courier' => $courier,
+                    'status' => $data['rajaongkir']['status'],
+                    'description' => $data['rajaongkir']['status']['description'] ?? 'Unknown error',
+                ]);
+                $results[$courier] = null;
+                continue;
+            }
+
+            $results[$courier] = $data;
+        }
+
+        return $results;
     }
 }

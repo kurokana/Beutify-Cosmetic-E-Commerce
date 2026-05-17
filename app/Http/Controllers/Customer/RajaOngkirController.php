@@ -91,7 +91,11 @@ class RajaOngkirController extends Controller
         $response = Http::withHeaders([
             'Accept' => 'application/json',
             'User-Agent' => 'KosmetikEcommerce/1.0',
-        ])->get($this->rawRegionUrl($path));
+        ])
+            ->timeout(1.6)
+            ->connectTimeout(1)
+            ->retry(1, 120)
+            ->get($this->rawRegionUrl($path));
 
         if ($response->failed()) {
             throw new \Exception('Gagal memuat data wilayah.');
@@ -210,7 +214,11 @@ class RajaOngkirController extends Controller
         $response = Http::withHeaders([
             'Accept' => 'text/plain',
             'User-Agent' => 'KosmetikEcommerce/1.0',
-        ])->get($this->rawLaravoltUrl($path));
+        ])
+            ->timeout(1.6)
+            ->connectTimeout(1)
+            ->retry(1, 120)
+            ->get($this->rawLaravoltUrl($path));
 
         if ($response->failed()) {
             throw new \Exception('Gagal memuat data kodepos.');

@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Services\ShippingService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class OrderController extends Controller
@@ -75,10 +78,86 @@ class OrderController extends Controller
             return back()->with('error', 'Pesanan tidak dapat dikonfirmasi pada status saat ini.');
         }
 
-        $order->update(['status' => 'delivered']);
+        $order->update([
+            'status' => 'delivered',
+            'delivered_at' => now(),
+        ]);
 
         return redirect()->route('orders.show', $order->id)
             ->with('success', 'Penerimaan pesanan berhasil dikonfirmasi. Terima kasih!');
+    }
+
+    /**
+     * Request a refund within 24 hours after confirming receipt.
+     *
+     * POST /orders/{order}/refund
+     */
+    public function requestRefund(Request $request, Order $order): RedirectResponse
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        if ($order->user_id !== $user->id) {
+            abort(403, 'Anda tidak memiliki akses ke pesanan ini.');
+        }
+
+        if ($order->status !== 'delivered') {
+            return back()->with('error', 'Refund hanya bisa diajukan untuk pesanan yang sudah selesai.');
+        }
+
+        if ($order->refund_requested_at) {
+            return back()->with('error', 'Refund untuk pesanan ini sudah diajukan.');
+        }
+
+        if (! $order->delivered_at) {
+            $order->update([
+                'delivered_at' => $order->updated_at ?? now(),
+            ]);
+            $order->refresh();
+        }
+
+        if (! $order->delivered_at) {
+            return back()->with('error', 'Waktu penyelesaian pesanan tidak ditemukan.');
+        }
+
+        if ($order->delivered_at->copy()->addDay()->isPast()) {
+            return back()->with('error', 'Masa pengajuan refund (1x24 jam) sudah berakhir.');
+        }
+
+        if ($order->payment?->status !== 'success') {
+            return back()->with('error', 'Refund hanya tersedia untuk pesanan yang sudah dibayar.');
+        }
+
+        $data = $request->validate([
+            'refund_reason' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        DB::transaction(function () use ($order, $data) {
+            $order->loadMissing(['items', 'payment']);
+
+            foreach ($order->items as $item) {
+                if ($item->product_variant_id) {
+                    $variant = ProductVariant::lockForUpdate()->find($item->product_variant_id);
+                    if ($variant) {
+                        $variant->increment('stock', $item->quantity);
+                    }
+                } else {
+                    $product = Product::lockForUpdate()->find($item->product_id);
+                    if ($product) {
+                        $product->increment('stock', $item->quantity);
+                    }
+                }
+            }
+
+            $order->update([
+                'status' => 'cancelled',
+                'refund_requested_at' => now(),
+                'refund_reason' => $data['refund_reason'] ?? null,
+            ]);
+        });
+
+        return redirect()->route('orders.show', $order->id)
+            ->with('success', 'Permintaan refund berhasil diajukan. Tim kami akan memprosesnya.');
     }
 
     /**

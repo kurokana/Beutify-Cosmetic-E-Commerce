@@ -241,6 +241,11 @@
                 </div>
 
                 {{-- Tombol Aksi --}}
+                @php
+                    $refundDeadline = $order->delivered_at ? $order->delivered_at->copy()->addDay() : null;
+                    $refundExpired = $refundDeadline ? now()->gt($refundDeadline) : false;
+                    $canRequestRefund = $order->status === 'delivered' && ! $order->refund_requested_at && ! $refundExpired;
+                @endphp
                 <div class="flex flex-wrap gap-3">
                     @if ($order->status === 'pending_payment' && $order->payment?->snap_token)
                         <button type="button" onclick="payNow('{{ $order->payment->snap_token }}')"
@@ -276,6 +281,37 @@
                                 Konfirmasi Penerimaan
                             </button>
                         </form>
+                    @endif
+
+                    @if ($canRequestRefund)
+                        <form method="POST" action="{{ route('orders.refund', $order->id) }}" class="w-full">
+                            @csrf
+                            <div class="bg-red-50 border border-red-200 rounded-xl p-4">
+                                <p class="text-sm text-red-700 font-semibold mb-2">Ajukan refund maksimal 1x24 jam setelah pesanan selesai.</p>
+                                <textarea name="refund_reason" rows="2" placeholder="Alasan refund (opsional)"
+                                    class="w-full px-3 py-2 text-sm border border-red-200 rounded-lg focus:ring-2 focus:ring-red-300 focus:border-transparent"></textarea>
+                                <button type="submit" onclick="return confirm('Ajukan refund untuk pesanan ini?')"
+                                    class="mt-3 inline-flex items-center gap-2 px-5 py-2.5 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M18.364 5.636l-1.414 1.414M6.343 17.657l-1.414 1.414M5.636 5.636l1.414 1.414M17.657 17.657l1.414 1.414M12 8v4l3 3" />
+                                    </svg>
+                                    Ajukan Refund
+                                </button>
+                            </div>
+                        </form>
+                    @elseif ($order->status === 'delivered' && $order->refund_requested_at)
+                        <div class="w-full bg-green-50 border border-green-200 rounded-xl p-4 text-sm text-green-700 font-semibold">
+                            Refund sudah diajukan pada {{ $order->refund_requested_at->translatedFormat('d F Y, H:i') }}.
+                        </div>
+                    @elseif ($order->status === 'delivered' && ! $order->delivered_at)
+                        <div class="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 text-sm text-gray-600 font-semibold">
+                            Waktu penyelesaian pesanan belum tercatat. Silakan hubungi admin jika tombol refund tidak muncul.
+                        </div>
+                    @elseif ($order->status === 'delivered' && $refundExpired)
+                        <div class="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 text-sm text-gray-600 font-semibold">
+                            Masa pengajuan refund (1x24 jam) sudah berakhir.
+                        </div>
                     @endif
 
                     <a href="{{ route('orders.index') }}"

@@ -26,6 +26,9 @@ class Order extends Model
         'voucher_id',
         'status',
         'notes',
+        'delivered_at',
+        'refund_requested_at',
+        'refund_reason',
     ];
 
     protected function casts(): array
@@ -35,6 +38,8 @@ class Order extends Model
             'subtotal'        => 'decimal:2',
             'discount_amount' => 'decimal:2',
             'total_amount'    => 'decimal:2',
+            'delivered_at' => 'datetime',
+            'refund_requested_at' => 'datetime',
         ];
     }
 
