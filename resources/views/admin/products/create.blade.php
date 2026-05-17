@@ -1,61 +1,77 @@
 <x-admin-layout>
     <x-slot name="pageTitle">Tambah Produk</x-slot>
 
-    <div class="max-w-4xl">
+    <div class="space-y-6">
         {{-- Header --}}
-        <div class="mb-6">
-            <div class="flex items-center gap-2 text-sm text-gray-600 mb-2">
-                <a href="{{ route('admin.products.index') }}" class="hover:text-pink-600 transition-colors">Produk</a>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        <div class="flex items-center gap-4">
+            <a
+                href="{{ route('admin.products.index') }}"
+                class="text-gray-600 hover:text-gray-900 transition-colors"
+            >
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                 </svg>
-                <span class="text-gray-900">Tambah Produk</span>
+            </a>
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900">Tambah Produk Baru</h2>
+                <p class="mt-1 text-sm text-gray-600">Isi formulir di bawah untuk menambahkan produk baru</p>
             </div>
-            <h2 class="text-2xl font-bold text-gray-900">Tambah Produk Baru</h2>
         </div>
 
         {{-- Form --}}
-        <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
-            @csrf
+        <div class="bg-white rounded-lg shadow">
+            <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-6">
+                @csrf
 
-            <div class="bg-white rounded-lg shadow p-6 space-y-6">
                 {{-- Product Name --}}
                 <div>
-                    <x-input-label for="name" value="Nama Produk *" />
-                    <x-text-input
-                        id="name"
-                        name="name"
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                        Nama Produk <span class="text-red-500">*</span>
+                    </label>
+                    <input
                         type="text"
-                        class="mt-1 block w-full"
-                        :value="old('name')"
+                        name="name"
+                        id="name"
+                        value="{{ old('name') }}"
                         required
                         autofocus
-                    />
-                    <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent @error('name') border-red-500 @enderror"
+                        placeholder="Contoh: L'Oreal Serum"
+                    >
+                    @error('name')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 {{-- Description --}}
                 <div>
-                    <x-input-label for="description" value="Deskripsi *" />
+                    <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+                        Deskripsi <span class="text-red-500">*</span>
+                    </label>
                     <textarea
-                        id="description"
                         name="description"
-                        rows="5"
-                        class="mt-1 block w-full border-gray-300 focus:border-pink-500 focus:ring-pink-500 rounded-md shadow-sm"
+                        id="description"
+                        rows="4"
                         required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent @error('description') border-red-500 @enderror"
+                        placeholder="Deskripsi lengkap tentang produk..."
                     >{{ old('description') }}</textarea>
-                    <x-input-error :messages="$errors->get('description')" class="mt-2" />
+                    @error('description')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 {{-- Brand & Category --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <x-input-label for="brand_id" value="Merek *" />
+                        <label for="brand_id" class="block text-sm font-medium text-gray-700 mb-2">
+                            Merek <span class="text-red-500">*</span>
+                        </label>
                         <select
                             id="brand_id"
                             name="brand_id"
-                            class="mt-1 block w-full border-gray-300 focus:border-pink-500 focus:ring-pink-500 rounded-md shadow-sm"
                             required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent @error('brand_id') border-red-500 @enderror"
                         >
                             <option value="">Pilih Merek</option>
                             @foreach ($brands as $brand)
@@ -64,16 +80,20 @@
                                 </option>
                             @endforeach
                         </select>
-                        <x-input-error :messages="$errors->get('brand_id')" class="mt-2" />
+                        @error('brand_id')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
-                        <x-input-label for="category_id" value="Kategori *" />
+                        <label for="category_id" class="block text-sm font-medium text-gray-700 mb-2">
+                            Kategori <span class="text-red-500">*</span>
+                        </label>
                         <select
                             id="category_id"
                             name="category_id"
-                            class="mt-1 block w-full border-gray-300 focus:border-pink-500 focus:ring-pink-500 rounded-md shadow-sm"
                             required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent @error('category_id') border-red-500 @enderror"
                         >
                             <option value="">Pilih Kategori</option>
                             @foreach ($categories as $category)
@@ -82,116 +102,150 @@
                                 </option>
                             @endforeach
                         </select>
-                        <x-input-error :messages="$errors->get('category_id')" class="mt-2" />
+                        @error('category_id')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
 
                 {{-- Price, Stock, Weight --}}
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div>
-                        <x-input-label for="price" value="Harga (Rp) *" />
-                        <x-text-input
-                            id="price"
-                            name="price"
+                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">
+                            Harga (Rp) <span class="text-red-500">*</span>
+                        </label>
+                        <input
                             type="number"
+                            name="price"
+                            id="price"
                             step="0.01"
                             min="0"
-                            class="mt-1 block w-full"
-                            :value="old('price')"
+                            value="{{ old('price') }}"
                             required
-                        />
-                        <x-input-error :messages="$errors->get('price')" class="mt-2" />
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent @error('price') border-red-500 @enderror"
+                            placeholder="0"
+                        >
+                        @error('price')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
-                        <x-input-label for="stock" value="Stok *" />
-                        <x-text-input
-                            id="stock"
+                        <label for="stock" class="block text-sm font-medium text-gray-700 mb-2">
+                            Stok <span class="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="number"
                             name="stock"
-                            type="number"
+                            id="stock"
                             min="0"
-                            class="mt-1 block w-full"
-                            :value="old('stock', 0)"
+                            value="{{ old('stock', 0) }}"
                             required
-                        />
-                        <x-input-error :messages="$errors->get('stock')" class="mt-2" />
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent @error('stock') border-red-500 @enderror"
+                            placeholder="0"
+                        >
+                        @error('stock')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
-                        <x-input-label for="weight" value="Berat (gram) *" />
-                        <x-text-input
-                            id="weight"
-                            name="weight"
+                        <label for="weight" class="block text-sm font-medium text-gray-700 mb-2">
+                            Berat (gram) <span class="text-red-500">*</span>
+                        </label>
+                        <input
                             type="number"
+                            name="weight"
+                            id="weight"
                             min="1"
-                            class="mt-1 block w-full"
-                            :value="old('weight')"
+                            value="{{ old('weight') }}"
                             required
-                        />
-                        <x-input-error :messages="$errors->get('weight')" class="mt-2" />
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent @error('weight') border-red-500 @enderror"
+                            placeholder="0"
+                        >
+                        @error('weight')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
 
                 {{-- SKU --}}
                 <div>
-                    <x-input-label for="sku" value="SKU *" />
-                    <x-text-input
-                        id="sku"
-                        name="sku"
+                    <label for="sku" class="block text-sm font-medium text-gray-700 mb-2">
+                        SKU <span class="text-red-500">*</span>
+                    </label>
+                    <input
                         type="text"
-                        class="mt-1 block w-full"
-                        :value="old('sku')"
+                        name="sku"
+                        id="sku"
+                        value="{{ old('sku') }}"
                         required
-                    />
-                    <p class="mt-1 text-sm text-gray-500">Kode unik untuk identifikasi produk</p>
-                    <x-input-error :messages="$errors->get('sku')" class="mt-2" />
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent @error('sku') border-red-500 @enderror"
+                        placeholder="Contoh: LOREAL-SERUM-001"
+                    >
+                    <p class="mt-1 text-xs text-gray-500">Kode unik untuk identifikasi produk</p>
+                    @error('sku')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 {{-- Images --}}
                 <div>
-                    <x-input-label for="images" value="Gambar Produk *" />
-                    <input
-                        id="images"
-                        name="images[]"
-                        type="file"
-                        accept="image/jpeg,image/jpg,image/png,image/webp"
-                        multiple
-                        class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100"
-                        required
-                    />
-                    <p class="mt-1 text-sm text-gray-500">Format: JPG, PNG, WebP. Maksimal 2MB per file. Gambar pertama akan menjadi gambar utama.</p>
-                    <x-input-error :messages="$errors->get('images')" class="mt-2" />
-                    <x-input-error :messages="$errors->get('images.*')" class="mt-2" />
+                    <label for="images" class="block text-sm font-medium text-gray-700 mb-2">
+                        Gambar Produk <span class="text-red-500">*</span>
+                    </label>
+                    <div class="mt-1 flex items-center gap-4">
+                        <div class="flex-1">
+                            <input
+                                type="file"
+                                name="images[]"
+                                id="images"
+                                accept="image/jpeg,image/png,image/webp"
+                                multiple
+                                required
+                                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100 @error('images') border-red-500 @enderror"
+                            >
+                            <p class="mt-1 text-xs text-gray-500">
+                                Format: JPG, PNG, WebP. Maksimal 2MB per file. Gambar pertama akan menjadi gambar utama.
+                            </p>
+                            @error('images')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
 
-                {{-- Active Status --}}
+                {{-- Is Active --}}
                 <div class="flex items-center">
                     <input
-                        id="is_active"
-                        name="is_active"
                         type="checkbox"
+                        name="is_active"
+                        id="is_active"
                         value="1"
                         {{ old('is_active', true) ? 'checked' : '' }}
                         class="h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300 rounded"
-                    />
-                    <label for="is_active" class="ml-2 block text-sm text-gray-900">
+                    >
+                    <label for="is_active" class="ml-2 block text-sm text-gray-700">
                         Aktifkan produk (tampilkan di katalog)
                     </label>
                 </div>
-            </div>
 
-            {{-- Actions --}}
-            <div class="flex items-center justify-end gap-4">
-                <a
-                    href="{{ route('admin.products.index') }}"
-                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2"
-                >
-                    Batal
-                </a>
-                <x-primary-button>
-                    Simpan Produk
-                </x-primary-button>
-            </div>
-        </form>
+                {{-- Actions --}}
+                <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
+                    <a
+                        href="{{ route('admin.products.index') }}"
+                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2"
+                    >
+                        Batal
+                    </a>
+                    <button
+                        type="submit"
+                        class="px-4 py-2 text-sm font-medium text-white bg-pink-600 rounded-lg hover:bg-pink-700 transition-colors focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2"
+                    >
+                        Simpan Produk
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </x-admin-layout>
