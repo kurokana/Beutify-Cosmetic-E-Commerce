@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
@@ -13,8 +14,8 @@ class DashboardController extends Controller
     /**
      * Display the admin dashboard with summary statistics.
      *
-     * Shows total products, total orders, total users, and total revenue
-     * to give the admin a quick overview of the store's performance.
+     * Shows total products, total orders, total users, total revenue,
+     * weekly sales, recent orders, and recent admin activity.
      */
     public function index(): View
     {
@@ -30,6 +31,36 @@ class DashboardController extends Controller
             ])->sum('total_amount'),
         ];
 
-        return view('admin.dashboard', compact('stats'));
+        $salesStatuses = [
+            'payment_confirmed',
+            'processing',
+            'shipped',
+            'delivered',
+        ];
+
+        $dailySales = [
+            'labels'  => [],
+            'orders'  => [],
+            'revenue' => [],
+        ];
+
+        for ($days = 6; $days >= 0; $days--) {
+            $date = Carbon::today()->subDays($days);
+
+            $dailySales['labels'][] = $date->format('d M');
+            $dailySales['orders'][] = Order::whereIn('status', $salesStatuses)
+                ->whereDate('created_at', $date)
+                ->count();
+            $dailySales['revenue'][] = Order::whereIn('status', $salesStatuses)
+                ->whereDate('created_at', $date)
+                ->sum('total_amount');
+        }
+
+        $recentOrders = Order::with('user')
+            ->orderByDesc('created_at')
+            ->take(5)
+            ->get();
+
+        return view('admin.dashboard', compact('stats', 'dailySales', 'recentOrders'));
     }
 }
