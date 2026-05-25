@@ -3,11 +3,13 @@
 namespace App\Providers;
 
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\Review;
 use App\Models\User;
 use App\Observers\OrderObserver;
+use App\Observers\OrderItemObserver;
 use App\Observers\ProductObserver;
 use App\Observers\ProductImageObserver;
 use App\Observers\ReviewObserver;
@@ -33,6 +35,7 @@ class AppServiceProvider extends ServiceProvider
         Product::observe(ProductObserver::class);
         ProductImage::observe(ProductImageObserver::class);
         Order::observe(OrderObserver::class);
+        OrderItem::observe(OrderItemObserver::class);
         User::observe(UserObserver::class);
         Review::observe(ReviewObserver::class);
     }

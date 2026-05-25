@@ -79,9 +79,9 @@
                     </a>
                 </div>
 
-                @if(isset($bestSellerProducts) && $bestSellerProducts->isNotEmpty())
+                @if(isset($bestSellers) && $bestSellers->isNotEmpty())
                     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                        @foreach($bestSellerProducts as $product)
+                        @foreach($bestSellers as $product)
                             @php
                                 $badge = $loop->first ? '#1 Terlaris' : null;
                             @endphp
