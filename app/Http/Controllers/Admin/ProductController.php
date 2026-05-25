@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\ProductImage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -97,6 +98,8 @@ class ProductController extends Controller
             }
 
             DB::commit();
+
+            $this->invalidateProductCaches();
 
             return redirect()
                 ->route('admin.products.index')
@@ -188,9 +191,13 @@ class ProductController extends Controller
                         'sort_order' => $currentMaxSortOrder + $index + 1,
                     ]);
                 }
+
+                $this->invalidateProductCaches();
             }
 
             DB::commit();
+
+            $this->invalidateProductCaches();
 
             return redirect()
                 ->route('admin.products.index')
@@ -273,9 +280,17 @@ class ProductController extends Controller
             // Delete the image record
             $image->delete();
 
+            $this->invalidateProductCaches();
+
             return back()->with('success', 'Gambar berhasil dihapus.');
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal menghapus gambar: ' . $e->getMessage());
         }
+    }
+
+    private function invalidateProductCaches(): void
+    {
+        Cache::forget('latest_products');
+        Cache::forget('best_sellers');
     }
 }
