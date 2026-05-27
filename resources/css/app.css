@@ -1,3 +1,49 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .bg-beutify-surface {
+    background-image: radial-gradient(circle at top left, rgba(244, 114, 182, 0.16), transparent 22%), radial-gradient(circle at bottom right, rgba(45, 212, 191, 0.16), transparent 24%), linear-gradient(180deg, #fff7fb 0%, #fcfeff 46%, #ecfdf5 100%);
+  }
+  .bg-beutify-card {
+    background-image: linear-gradient(180deg, #fff1f7 0%, #f8fafc 100%);
+  }
+  .bg-beutify-sidebar {
+    background-image: linear-gradient(180deg, #fce7f3 0%, #eff6ff 45%, #d1fae5 100%);
+  }
+  .bg-beutify-btn {
+    background-image: linear-gradient(135deg, #ec4899 0%, #14b8a6 100%);
+  }
+  .text-beutify-primary {
+    color: #db2777;
+  }
+  .text-beutify-accent {
+    color: #14b8a6;
+  }
+  .border-beutify-soft {
+    border-color: rgba(251, 207, 232, 0.4);
+  }
+}
+
+/* Global overrides for white backgrounds, to keep theme consistent across pages */
+.bg-white {
+  background-color: transparent !important;
+  background-image: linear-gradient(180deg, #fff1f7 0%, #f8fafc 100%) !important;
+}
+.bg-white\/90 {
+  background-color: rgba(255,255,255,0.9) !important;
+}
+.bg-white\/85 {
+  background-color: rgba(255,255,255,0.85) !important;
+}
+.bg-white\/80 {
+  background-color: rgba(255,255,255,0.8) !important;
+}
+.bg-white\/95 {
+  background-color: rgba(255,255,255,0.95) !important;
+}
+.border-gray-100,
+.border-gray-200 {
+  border-color: rgba(251, 207, 232, 0.45) !important;
+}

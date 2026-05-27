@@ -15,14 +15,14 @@
     $rating = (float) $product->average_rating;
 @endphp
 
-<div class="group relative flex flex-col overflow-hidden rounded-[1.75rem] bg-white border border-[#FFD1DC]/60 shadow-[0_14px_35px_rgba(248,187,208,0.18)] hover:shadow-[0_20px_45px_rgba(137,207,240,0.22)] hover:-translate-y-1.5 transition-all duration-300">
+<div class="group relative flex flex-col overflow-hidden rounded-[1.75rem] bg-[linear-gradient(180deg,#ffffff_0%,#fff7fb_100%)] border border-[#fbcfe8]/70 shadow-[0_20px_45px_rgba(244,114,182,0.16)] hover:shadow-[0_24px_55px_rgba(20,184,166,0.18)] hover:-translate-y-1.5 transition-all duration-300">
 
     {{-- Decorative soft gradient --}}
-    <div class="absolute inset-x-0 top-0 h-28 bg-gradient-to-br from-[#FFF1F6] via-white to-[#EAF8FF] pointer-events-none"></div>
+    <div class="absolute inset-x-0 top-0 h-28 bg-[radial-gradient(circle_at_top_left,_rgba(244,114,182,0.22),transparent_26%),radial-gradient(circle_at_bottom_right,_rgba(45,212,191,0.18),transparent_24%)] pointer-events-none"></div>
 
     {{-- Badge --}}
     @if (!empty($badge))
-        <div class="absolute top-3 left-3 z-20 px-3 py-1 rounded-full bg-[#E86FA3] text-white text-[10px] font-extrabold shadow-lg shadow-[#E86FA3]/25">
+        <div class="absolute top-3 left-3 z-20 px-3 py-1 rounded-full bg-[linear-gradient(135deg,#ec4899_0%,#14b8a6_100%)] text-white text-[10px] font-extrabold shadow-lg shadow-[#14b8a6]/20">
             {{ $badge }}
         </div>
     @endif
@@ -35,8 +35,8 @@
             <button type="submit"
                 class="w-9 h-9 rounded-full flex items-center justify-center border transition-all duration-200 shadow-sm
                     {{ $inWishlist
-                        ? 'bg-[#E86FA3] text-white border-[#E86FA3] hover:bg-[#D9578F]'
-                        : 'bg-white/90 text-slate-400 border-[#FFD1DC]/70 hover:text-[#E86FA3] hover:border-[#E86FA3]/50' }}"
+                        ? 'bg-[#ec4899] text-white border-[#ec4899] hover:bg-[#db2777]'
+                        : 'bg-white/95 text-slate-500 border-[#fbcfe8]/80 hover:text-[#db2777] hover:border-[#db2777]/50' }}"
                 title="{{ $inWishlist ? 'Hapus dari Wishlist' : 'Tambah ke Wishlist' }}">
                 <svg class="w-4.5 h-4.5" fill="{{ $inWishlist ? 'currentColor' : 'none' }}" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -46,7 +46,7 @@
         </form>
     @else
         <a href="{{ route('login') }}"
-            class="absolute top-3 right-3 z-20 w-9 h-9 rounded-full bg-white/90 border border-[#FFD1DC]/70 flex items-center justify-center shadow-sm text-slate-400 hover:text-[#E86FA3] hover:border-[#E86FA3]/50 transition-all duration-200"
+            class="absolute top-3 right-3 z-20 w-9 h-9 rounded-full bg-white/95 border border-[#fbcfe8]/80 flex items-center justify-center shadow-sm text-slate-500 hover:text-[#db2777] hover:border-[#db2777]/50 transition-all duration-200"
             title="Login untuk menambah ke Wishlist">
             <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -59,7 +59,7 @@
     <a href="{{ route('catalog.show', $product->slug) }}" class="relative z-10 block flex-1 flex flex-col">
 
         {{-- Image --}}
-        <div class="relative mx-3 mt-3 aspect-square overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-[#FFF8FB] to-[#EAF8FF] border border-white">
+        <div class="relative mx-3 mt-3 aspect-square overflow-hidden rounded-[1.5rem] bg-[linear-gradient(135deg,#fff7fb_0%,#ecfeff_100%)] border border-white">
             @if ($primaryImage)
                 <img
                     src="{{ Storage::url($primaryImage->image_path) }}"
@@ -68,7 +68,7 @@
                     loading="lazy"
                 >
             @else
-                <div class="w-full h-full flex flex-col items-center justify-center text-[#F8BBD0]">
+                <div class="w-full h-full flex flex-col items-center justify-center text-[#f9a8d4]">
                     <svg class="w-16 h-16 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
                             d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -79,7 +79,7 @@
 
             {{-- Hover quick actions --}}
             <div class="absolute inset-x-0 bottom-4 flex justify-center gap-2 opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-                <span class="w-9 h-9 rounded-full bg-white text-[#E86FA3] border border-[#FFD1DC] flex items-center justify-center shadow-md">
+                <span class="w-9 h-9 rounded-full bg-white text-[#db2777] border border-[#fbcfe8] flex items-center justify-center shadow-md">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -88,7 +88,7 @@
                     </svg>
                 </span>
 
-                <span class="w-9 h-9 rounded-full bg-[#89CFF0] text-white flex items-center justify-center shadow-md shadow-[#89CFF0]/30">
+                <span class="w-9 h-9 rounded-full bg-[#14b8a6] text-white flex items-center justify-center shadow-md shadow-[#14b8a6]/30">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -100,16 +100,16 @@
         {{-- Info --}}
         <div class="p-4 flex-1 flex flex-col">
             <div class="flex items-center justify-between gap-2 mb-1">
-                <p class="text-[11px] text-[#E86FA3] font-extrabold uppercase tracking-wide truncate">
+                <p class="text-[11px] text-[#db2777] font-extrabold uppercase tracking-wide truncate">
                     {{ $product->brand?->name ?? 'Beauty Brand' }}
                 </p>
 
                 @if ($product->stock > 0)
-                    <span class="shrink-0 w-2 h-2 rounded-full bg-[#89CFF0]"></span>
+                    <span class="shrink-0 w-2 h-2 rounded-full bg-[#14b8a6]"></span>
                 @endif
             </div>
 
-            <h3 class="text-sm font-bold text-slate-800 line-clamp-2 leading-snug min-h-[2.5rem] group-hover:text-[#E86FA3] transition-colors">
+            <h3 class="text-sm font-bold text-slate-800 line-clamp-2 leading-snug min-h-[2.5rem] group-hover:text-[#db2777] transition-colors">
                 {{ $product->name }}
             </h3>
 
@@ -167,7 +167,7 @@
                     <input type="hidden" name="quantity" value="1">
 
                     <button type="submit"
-                        class="w-full py-3 bg-gradient-to-r from-[#E86FA3] to-[#89CFF0] text-white text-xs font-extrabold rounded-full shadow-lg shadow-[#F8BBD0]/30 hover:shadow-[#89CFF0]/30 hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2">
+                        class="w-full py-3 bg-[linear-gradient(135deg,#ec4899_0%,#14b8a6_100%)] text-white text-xs font-extrabold rounded-full shadow-[0_18px_30px_-18px_rgba(20,184,166,0.55)] hover:scale-[1.01] transition-all duration-200 flex items-center justify-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -177,7 +177,7 @@
                 </form>
             @else
                 <a href="{{ route('login') }}"
-                    class="w-full py-3 bg-gradient-to-r from-[#E86FA3] to-[#89CFF0] text-white text-xs font-extrabold rounded-full shadow-lg shadow-[#F8BBD0]/30 hover:shadow-[#89CFF0]/30 hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2">
+                    class="w-full py-3 bg-[linear-gradient(135deg,#ec4899_0%,#14b8a6_100%)] text-white text-xs font-extrabold rounded-full shadow-[0_18px_30px_-18px_rgba(20,184,166,0.55)] hover:scale-[1.01] transition-all duration-200 flex items-center justify-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
