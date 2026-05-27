@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-[#FFD1DC]/70 shadow-[0_8px_30px_rgba(248,187,208,0.16)]">
+<nav x-data="{ open: false }" class="sticky top-0 z-50 bg-white/85 backdrop-blur-xl border-b border-[#fbcfe8]/70 shadow-[0_12px_40px_rgba(244,114,182,0.15)]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div class="flex items-center justify-between min-h-[88px] gap-4">
@@ -7,20 +7,20 @@
             <a href="/" class="flex items-center gap-3 group">
                 <div class="relative">
                     <!-- Ikon bunga lebih besar -->
-                    <svg class="w-14 h-14" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="20" cy="15" r="6" fill="#FFD1DC"/>
-                        <circle cx="14" cy="22" r="6" fill="#F8BBD0"/>
-                        <circle cx="26" cy="22" r="6" fill="#F8BBD0"/>
-                        <circle cx="14" cy="22" r="6" fill="#89CFF0" opacity="0.5"/>
-                        <circle cx="26" cy="22" r="6" fill="#89CFF0" opacity="0.5"/>
-                        <circle cx="20" cy="20" r="3" fill="#E86FA3"/>
+                    <svg class="w-14 h-14 drop-shadow-[0_10px_18px_rgba(244,114,182,0.22)]" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="20" cy="15" r="6" fill="#f9a8d4"/>
+                        <circle cx="14" cy="22" r="6" fill="#f472b6"/>
+                        <circle cx="26" cy="22" r="6" fill="#f472b6"/>
+                        <circle cx="14" cy="22" r="6" fill="#67e8f9" opacity="0.55"/>
+                        <circle cx="26" cy="22" r="6" fill="#67e8f9" opacity="0.55"/>
+                        <circle cx="20" cy="20" r="3" fill="#db2777"/>
                     </svg>
                 </div>
                 <div class="leading-tight">
-                    <h1 class="text-3xl font-extrabold tracking-tight text-[#E86FA3]">
+                    <h1 class="text-3xl font-extrabold tracking-tight text-[#db2777]">
                         Beutify
                     </h1>
-                    <p class="text-xs uppercase tracking-[0.3em] text-slate-400 font-bold">
+                    <p class="text-xs uppercase tracking-[0.3em] text-slate-500 font-bold">
                         Beauty Store
                     </p>
                 </div>
@@ -35,11 +35,11 @@
                             name="q"
                             value="{{ request('q') }}"
                             placeholder="Cari skincare, makeup, serum..."
-                            class="w-full h-12 pl-5 pr-14 rounded-full bg-[#FFF8FB] border border-[#FFD1DC]/80 text-sm text-slate-600 placeholder:text-slate-300 focus:border-[#89CFF0] focus:ring-4 focus:ring-[#BDEBFF]/40 transition"
+                            class="w-full h-12 pl-5 pr-14 rounded-full bg-white/85 border border-[#fbcfe8]/80 text-sm text-slate-700 placeholder:text-slate-400 focus:border-[#14b8a6] focus:ring-4 focus:ring-[#99f6e4]/40 transition"
                         >
                         <button
                             type="submit"
-                            class="absolute right-1.5 top-1.5 w-9 h-9 rounded-full bg-[#E86FA3] text-white flex items-center justify-center hover:bg-[#D9578F] transition"
+                            class="absolute right-1.5 top-1.5 w-9 h-9 rounded-full bg-beutify-btn text-white flex items-center justify-center hover:scale-[1.02] transition"
                         >
                             <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -55,7 +55,7 @@
 
                 @auth
                     <a href="{{ route('wishlist.index') }}"
-                        class="relative w-11 h-11 rounded-full bg-[#FFF8FB] border border-[#FFD1DC]/70 text-[#E86FA3] flex items-center justify-center hover:bg-[#FFF0F6] hover:-translate-y-0.5 transition"
+                        class="relative w-11 h-11 rounded-full bg-[#fff1f7] border border-[#fbcfe8] text-[#db2777] flex items-center justify-center hover:bg-[#fce7f3] hover:-translate-y-0.5 transition"
                         title="Wishlist">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -64,7 +64,7 @@
                     </a>
 
                     <a href="{{ route('cart.index') }}"
-                        class="relative w-11 h-11 rounded-full bg-[#EAF8FF] border border-[#BDEBFF] text-[#4BAED8] flex items-center justify-center hover:bg-[#DDF3FF] hover:-translate-y-0.5 transition"
+                        class="relative w-11 h-11 rounded-full bg-[#ecfeff] border border-[#99f6e4] text-[#0f766e] flex items-center justify-center hover:bg-[#d1fae5] hover:-translate-y-0.5 transition"
                         title="Keranjang">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -105,8 +105,8 @@
                         </x-slot>
                     </x-dropdown>
                 @else
-                    <a href="{{ route('login') }}" class="px-5 py-2.5 rounded-full text-sm font-extrabold text-slate-600 hover:text-[#E86FA3] transition">Login</a>
-                    <a href="{{ route('register') }}" class="px-5 py-2.5 rounded-full bg-[#E86FA3] text-white text-sm font-extrabold shadow-lg shadow-[#E86FA3]/25 hover:bg-[#D9578F] transition">Register</a>
+                    <a href="{{ route('login') }}" class="px-5 py-2.5 rounded-full text-sm font-extrabold text-slate-600 hover:text-[#db2777] transition">Login</a>
+                    <a href="{{ route('register') }}" class="px-5 py-2.5 rounded-full bg-beutify-btn text-white text-sm font-extrabold shadow-[0_18px_30px_-18px_rgba(20,184,166,0.55)] hover:scale-[1.02] transition">Register</a>
                 @endauth
             </div>
 
@@ -123,14 +123,14 @@
 
         {{-- Desktop Bottom Menu: Hanya Home, Katalog, Order (order hanya jika login) --}}
         <div class="hidden lg:flex items-center justify-center gap-8 h-12 border-t border-[#FFD1DC]/50 text-sm font-bold text-slate-500">
-            <a href="{{ route('dashboard') }}" class="transition {{ request()->routeIs('dashboard') ? 'text-[#E86FA3]' : 'hover:text-[#E86FA3]' }}">
+            <a href="{{ route('dashboard') }}" class="transition {{ request()->routeIs('dashboard') ? 'text-beutify-primary' : 'hover:text-beutify-primary' }}">
                 Home
             </a>
-            <a href="{{ route('catalog.index') }}" class="transition {{ request()->routeIs('catalog.*') ? 'text-[#E86FA3]' : 'hover:text-[#E86FA3]' }}">
+            <a href="{{ route('catalog.index') }}" class="transition {{ request()->routeIs('catalog.*') ? 'text-beutify-primary' : 'hover:text-beutify-primary' }}">
                 Katalog
             </a>
             @auth
-                <a href="{{ route('orders.index') }}" class="transition {{ request()->routeIs('orders.*') ? 'text-[#E86FA3]' : 'hover:text-[#E86FA3]' }}">
+                <a href="{{ route('orders.index') }}" class="transition {{ request()->routeIs('orders.*') ? 'text-beutify-primary' : 'hover:text-beutify-primary' }}">
                     Order
                 </a>
             @endauth
@@ -143,7 +143,7 @@
             <form action="{{ route('catalog.index') }}" method="GET">
                 <div class="relative">
                     <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari produk..." class="w-full h-11 pl-4 pr-12 rounded-full bg-[#FFF8FB] border border-[#FFD1DC]/80 text-sm text-slate-600 placeholder:text-slate-300 focus:border-[#89CFF0] focus:ring-4 focus:ring-[#BDEBFF]/40 transition">
-                    <button type="submit" class="absolute right-1.5 top-1.5 w-8 h-8 rounded-full bg-[#E86FA3] text-white flex items-center justify-center">
+                    <button type="submit" class="absolute right-1.5 top-1.5 w-8 h-8 rounded-full bg-beutify-btn text-white flex items-center justify-center">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m1.6-5.15a6.75 6.75 0 11-13.5 0 6.75 6.75 0 0113.5 0z" />
                         </svg>
