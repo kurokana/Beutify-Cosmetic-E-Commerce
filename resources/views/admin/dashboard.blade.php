@@ -3,7 +3,7 @@
 
     <div class="space-y-6">
         {{-- Hero Summary --}}
-        <div class="bg-gradient-to-r from-[#FDF2F8] via-white to-[#EFF6FF] border border-[#FCE7F3] rounded-3xl p-8 shadow-sm">
+        <div class="bg-gradient-to-r from-[#FDF2F8]/70 via-white/75 to-[#EFF6FF]/70 backdrop-blur-md border border-[#FCE7F3] rounded-3xl p-8 shadow-sm">
             <div class="flex flex-col xl:flex-row gap-6 items-start xl:items-center justify-between">
                 <div class="max-w-2xl">
                     <p class="text-sm font-semibold uppercase tracking-[0.24em] text-[#BE185D] mb-3">Dashboard Admin</p>
@@ -16,7 +16,7 @@
         <div class="grid gap-6 xl:grid-cols-[2fr_1fr]">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {{-- Total Produk --}}
-                <div class="bg-white rounded-3xl border border-[#FFD1DC]/60 p-6 shadow-sm">
+                <div class="bg-white/70 backdrop-blur-md rounded-3xl border border-[#FFD1DC]/60 p-6 shadow-sm">
                     <div class="flex items-center justify-between gap-4">
                         <div>
                             <p class="text-sm text-gray-500 font-medium">Total Produk</p>
@@ -32,7 +32,7 @@
                 </div>
 
                 {{-- Total Pesanan --}}
-                <div class="bg-white rounded-3xl border border-[#BDEBFF]/60 p-6 shadow-sm">
+                <div class="bg-white/70 backdrop-blur-md rounded-3xl border border-[#BDEBFF]/60 p-6 shadow-sm">
                     <div class="flex items-center justify-between gap-4">
                         <div>
                             <p class="text-sm text-slate-500 font-medium">Total Pesanan</p>
@@ -48,7 +48,7 @@
                 </div>
 
                 {{-- Total Pengguna --}}
-                <div class="bg-white rounded-3xl border border-[#E9E7FF]/60 p-6 shadow-sm">
+                <div class="bg-white/70 backdrop-blur-md rounded-3xl border border-[#E9E7FF]/60 p-6 shadow-sm">
                     <div class="flex items-center justify-between gap-4">
                         <div>
                             <p class="text-sm text-gray-500 font-medium">Total Pengguna</p>
@@ -64,7 +64,7 @@
                 </div>
 
                 {{-- Total Pendapatan --}}
-                <div class="bg-white rounded-3xl border border-[#FFD1DC]/60 p-6 shadow-sm">
+                <div class="bg-white/70 backdrop-blur-md rounded-3xl border border-[#FFD1DC]/60 p-6 shadow-sm">
                     <div class="flex items-center justify-between gap-4">
                         <div>
                             <p class="text-sm text-slate-500 font-medium">Total Pendapatan</p>
@@ -80,7 +80,7 @@
                 </div>
             </div>
 
-            <div class="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm h-full">
+            <div class="bg-white/70 backdrop-blur-md rounded-3xl border border-gray-100 p-6 shadow-sm h-full">
                 <div class="mb-6">
                     <h2 class="text-lg font-semibold text-slate-900">Notifikasi Pesanan Masuk</h2>
                     <p class="mt-1 text-sm text-slate-500">Pesanan baru dari pelanggan yang masuk ke admin panel.</p>
@@ -104,7 +104,7 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm">
+        <div class="bg-white/70 backdrop-blur-md rounded-3xl border border-gray-100 p-6 shadow-sm">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                 <div>
                     <h2 class="text-lg font-semibold text-slate-900">Pesanan Terbaru</h2>

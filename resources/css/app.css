@@ -1,3 +1,35 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ═══════════════════════════════════════════
+   Admin Glassmorphism Theme (BG.png Support)
+   ═══════════════════════════════════════════ */
+.admin-layout-body .bg-white {
+    background-color: rgba(255, 255, 255, 0.75) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+}
+
+.admin-layout-body .bg-gradient-to-r {
+    background-image: linear-gradient(to right, rgba(253, 242, 248, 0.65), rgba(255, 255, 255, 0.75), rgba(239, 246, 255, 0.65)) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+}
+
+/* Ensure inputs, selects and tables look clean on the blurred background */
+.admin-layout-body table thead,
+.admin-layout-body .bg-slate-50,
+.admin-layout-body .bg-gray-50 {
+    background-color: rgba(248, 250, 252, 0.5) !important;
+}
+
+.admin-layout-body select,
+.admin-layout-body input[type="text"],
+.admin-layout-body input[type="number"],
+.admin-layout-body input[type="date"],
+.admin-layout-body textarea {
+    background-color: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(8px) !important;
+}
+

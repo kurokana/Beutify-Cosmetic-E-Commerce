@@ -16,7 +16,7 @@
 
         @stack('styles')
     </head>
-    <body class="font-sans antialiased bg-[#FFF8FB] text-slate-900">
+    <body class="font-sans antialiased text-slate-900 bg-cover bg-center bg-no-repeat bg-fixed admin-layout-body" style="background-image: url('{{ asset('images/BG.png') }}')">
 
         <div x-data="{ sidebarOpen: false }" class="flex h-screen overflow-hidden">
 
@@ -37,7 +37,7 @@
             {{-- Sidebar --}}
             <aside
                 :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-                class="fixed inset-y-0 left-0 z-30 w-64 bg-white text-slate-900 transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-0 flex flex-col shadow-lg border-r border-[#FFD1DC]/30"
+                class="fixed inset-y-0 left-0 z-30 w-64 bg-white/80 backdrop-blur-md text-slate-900 transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-0 flex flex-col shadow-lg border-r border-[#FFD1DC]/30"
                 aria-label="Navigasi admin"
             >
                 {{-- Sidebar Header --}}
@@ -131,7 +131,7 @@
             <div class="flex-1 flex flex-col overflow-hidden">
 
                 {{-- Top Header Bar --}}
-                <header class="bg-white border-b border-[#FFD1DC]/40 h-16 flex items-center justify-between px-4 sm:px-6 flex-shrink-0">
+                <header class="bg-white/80 backdrop-blur-md border-b border-[#FFD1DC]/40 h-16 flex items-center justify-between px-4 sm:px-6 flex-shrink-0">
                     {{-- Mobile: Hamburger --}}
                     <button
                         @click="sidebarOpen = true"
