@@ -36,18 +36,6 @@ class PaymentController extends Controller
                 ->with('error', 'Pesanan ini tidak memerlukan pembayaran.');
         }
 
-        $syncedStatus = $this->paymentService->syncPaymentStatus($order);
-
-        if ($syncedStatus === 'success') {
-            return redirect()->route('orders.show', $order->id)
-                ->with('success', 'Pembayaran berhasil terdeteksi.');
-        }
-
-        if (in_array($syncedStatus, ['expired', 'failed', 'cancelled'], true)) {
-            return redirect()->route('orders.show', $order->id)
-                ->with('error', 'Pembayaran tidak berhasil. Silakan lakukan pembayaran ulang.');
-        }
-
         $order->load(['items', 'address', 'payment', 'voucher']);
 
         return view('customer.payment.show', compact('order'));
@@ -80,7 +68,7 @@ class PaymentController extends Controller
         }
 
         try {
-            $snapToken = $this->paymentService->createSnapTransaction($order, false);
+            $snapToken = $this->paymentService->createSnapTransaction($order);
 
             return response()->json([
                 'success'    => true,
@@ -92,47 +80,6 @@ class PaymentController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal membuat transaksi pembayaran. Silakan coba lagi.',
-            ], 500);
-        }
-    }
-
-    /**
-     * Refresh Snap token to allow changing payment method.
-     *
-     * POST /payment/refresh/{order}
-     */
-    public function refresh(Order $order): JsonResponse
-    {
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
-
-        if ($order->user_id !== $user->id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Anda tidak memiliki akses ke pesanan ini.',
-            ], 403);
-        }
-
-        if ($order->status !== 'pending_payment') {
-            return response()->json([
-                'success' => false,
-                'message' => 'Pesanan ini tidak memerlukan pembayaran.',
-            ], 422);
-        }
-
-        try {
-            $snapToken = $this->paymentService->createSnapTransaction($order, true);
-
-            return response()->json([
-                'success' => true,
-                'snap_token' => $snapToken,
-            ]);
-        } catch (\Throwable $e) {
-            report($e);
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal memperbarui metode pembayaran. Silakan coba lagi.',
             ], 500);
         }
     }

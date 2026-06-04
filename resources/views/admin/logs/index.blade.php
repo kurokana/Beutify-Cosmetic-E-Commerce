@@ -1,27 +1,27 @@
-<x-admin-layout>
+﻿<x-admin-layout>
     <x-slot name="pageTitle">Log Aktivitas Admin</x-slot>
 
     <div class="space-y-6">
         {{-- Header --}}
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h2 class="text-2xl font-bold text-gray-900">Log Aktivitas Admin</h2>
-                <p class="mt-1 text-sm text-gray-600">Riwayat semua aktivitas admin di sistem</p>
+                <h2 class="text-2xl font-bold text-warm-white">Log Aktivitas Admin</h2>
+                <p class="mt-1 text-sm text-warm-gray">Riwayat semua aktivitas admin di sistem</p>
             </div>
         </div>
 
         {{-- Filters --}}
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-dark-secondary rounded-lg shadow p-6">
             <form method="GET" action="{{ route('admin.logs.index') }}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {{-- Admin Filter --}}
                 <div>
-                    <label for="admin_id" class="block text-sm font-medium text-gray-700 mb-1">
+                    <label for="admin_id" class="block text-sm font-medium text-warm-white mb-1">
                         Admin
                     </label>
                     <select
                         id="admin_id"
                         name="admin_id"
-                        class="w-full rounded-lg border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500"
+                        class="w-full rounded-lg border-border-subtle shadow-sm focus:border-pink-500 focus:ring-pink-500"
                     >
                         <option value="">Semua Admin</option>
                         @foreach ($admins as $admin)
@@ -34,13 +34,13 @@
 
                 {{-- Action Filter --}}
                 <div>
-                    <label for="action" class="block text-sm font-medium text-gray-700 mb-1">
+                    <label for="action" class="block text-sm font-medium text-warm-white mb-1">
                         Aksi
                     </label>
                     <select
                         id="action"
                         name="action"
-                        class="w-full rounded-lg border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500"
+                        class="w-full rounded-lg border-border-subtle shadow-sm focus:border-pink-500 focus:ring-pink-500"
                     >
                         <option value="">Semua Aksi</option>
                         <option value="created" {{ request('action') === 'created' ? 'selected' : '' }}>
@@ -57,13 +57,13 @@
 
                 {{-- Model Type Filter --}}
                 <div>
-                    <label for="model_type" class="block text-sm font-medium text-gray-700 mb-1">
+                    <label for="model_type" class="block text-sm font-medium text-warm-white mb-1">
                         Tipe Model
                     </label>
                     <select
                         id="model_type"
                         name="model_type"
-                        class="w-full rounded-lg border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500"
+                        class="w-full rounded-lg border-border-subtle shadow-sm focus:border-pink-500 focus:ring-pink-500"
                     >
                         <option value="">Semua Tipe</option>
                         @foreach ($modelTypes as $type)
@@ -76,7 +76,7 @@
 
                 {{-- Date From Filter --}}
                 <div>
-                    <label for="date_from" class="block text-sm font-medium text-gray-700 mb-1">
+                    <label for="date_from" class="block text-sm font-medium text-warm-white mb-1">
                         Dari Tanggal
                     </label>
                     <input
@@ -84,13 +84,13 @@
                         id="date_from"
                         name="date_from"
                         value="{{ request('date_from') }}"
-                        class="w-full rounded-lg border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500"
+                        class="w-full rounded-lg border-border-subtle shadow-sm focus:border-pink-500 focus:ring-pink-500"
                     >
                 </div>
 
                 {{-- Date To Filter --}}
                 <div>
-                    <label for="date_to" class="block text-sm font-medium text-gray-700 mb-1">
+                    <label for="date_to" class="block text-sm font-medium text-warm-white mb-1">
                         Sampai Tanggal
                     </label>
                     <input
@@ -98,7 +98,7 @@
                         id="date_to"
                         name="date_to"
                         value="{{ request('date_to') }}"
-                        class="w-full rounded-lg border-gray-300 shadow-sm focus:border-pink-500 focus:ring-pink-500"
+                        class="w-full rounded-lg border-border-subtle shadow-sm focus:border-pink-500 focus:ring-pink-500"
                     >
                 </div>
 
@@ -115,7 +115,7 @@
                     </button>
                     <a
                         href="{{ route('admin.logs.index') }}"
-                        class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-300 transition-colors"
+                        class="inline-flex items-center px-4 py-2 bg-gray-200 text-warm-white text-sm font-medium rounded-lg hover:bg-gray-300 transition-colors"
                     >
                         Reset
                     </a>
@@ -124,39 +124,39 @@
         </div>
 
         {{-- Logs Table --}}
-        <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="bg-dark-secondary rounded-lg shadow overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
+                    <thead class="bg-dark-tertiary">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-warm-gray uppercase tracking-wider">
                                 Waktu
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-warm-gray uppercase tracking-wider">
                                 Admin
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-warm-gray uppercase tracking-wider">
                                 Aksi
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-warm-gray uppercase tracking-wider">
                                 Model
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-warm-gray uppercase tracking-wider">
                                 ID Model
                             </th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-warm-gray uppercase tracking-wider">
                                 Aksi
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody class="bg-dark-secondary divide-y divide-gray-200">
                         @forelse ($logs as $log)
-                            <tr class="hover:bg-gray-50 transition-colors">
+                            <tr class="hover:bg-dark-tertiary transition-colors">
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">
+                                    <div class="text-sm text-warm-white">
                                         {{ $log->created_at->format('d M Y') }}
                                     </div>
-                                    <div class="text-sm text-gray-500">
+                                    <div class="text-sm text-warm-gray">
                                         {{ $log->created_at->format('H:i:s') }}
                                     </div>
                                 </td>
@@ -170,10 +170,10 @@
                                             </div>
                                         </div>
                                         <div class="ml-3">
-                                            <div class="text-sm font-medium text-gray-900">
+                                            <div class="text-sm font-medium text-warm-white">
                                                 {{ $log->admin->name ?? 'Unknown' }}
                                             </div>
-                                            <div class="text-xs text-gray-500">
+                                            <div class="text-xs text-warm-gray">
                                                 {{ $log->admin->email ?? '-' }}
                                             </div>
                                         </div>
@@ -202,18 +202,18 @@
                                             Dihapus
                                         </span>
                                     @else
-                                        <span class="inline-flex items-center px-2.5 py-1.5 text-xs font-medium rounded-full bg-gray-100 text-gray-800">
+                                        <span class="inline-flex items-center px-2.5 py-1.5 text-xs font-medium rounded-full bg-dark-tertiary text-warm-white">
                                             {{ ucfirst($log->action) }}
                                         </span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">
+                                    <div class="text-sm text-warm-white">
                                         {{ class_basename($log->model_type) }}
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">
+                                    <div class="text-sm text-warm-white">
                                         #{{ $log->model_id }}
                                     </div>
                                 </td>
@@ -234,10 +234,10 @@
                             <tr>
                                 <td colspan="6" class="px-6 py-12 text-center">
                                     <div class="flex flex-col items-center justify-center">
-                                        <svg class="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-12 h-12 text-warm-muted mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                         </svg>
-                                        <p class="text-gray-500 text-sm">Belum ada log aktivitas</p>
+                                        <p class="text-warm-gray text-sm">Belum ada log aktivitas</p>
                                     </div>
                                 </td>
                             </tr>
@@ -248,7 +248,7 @@
 
             {{-- Pagination --}}
             @if ($logs->hasPages())
-                <div class="px-6 py-4 border-t border-gray-200">
+                <div class="px-6 py-4 border-t border-border-subtle">
                     {{ $logs->links() }}
                 </div>
             @endif

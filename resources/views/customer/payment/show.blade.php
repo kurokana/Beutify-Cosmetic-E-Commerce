@@ -1,18 +1,18 @@
-<x-app-layout>
-    <div class="py-12 bg-[#FFF9FB] min-h-screen">
+﻿<x-app-layout>
+    <div class="py-12 bg-dark-primary min-h-screen">
         <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
 
             {{-- Header seperti halaman Katalog --}}
-            <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 border-b border-[#FFD1DC]/40 pb-6 gap-4">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 border-b border-border-subtle pb-6 gap-4">
                 <div>
                     <h1 class="text-3xl md:text-2xl font-black tracking-tight leading-tight">
-                        <span class="text-[#89CFF0]">Pembayaran</span>
-                        <span class="text-[#E86FA3]">Pesanan</span>
+                        <span class="text-gold-light">Pembayaran</span>
+                        <span class="text-gold">Pesanan</span>
                     </h1>
-                    <p class="text-slate-400 text-sm mt-1 font-medium">{{ $order->order_number }}</p>
+                    <p class="text-warm-muted text-sm mt-1 font-medium">{{ $order->order_number }}</p>
                 </div>
                 <div class="flex items-center">
-                    <span class="px-4 py-1.5 bg-white border border-[#FFD1DC] text-[#E86FA3] text-[11px] font-black uppercase tracking-widest rounded-xl shadow-sm">
+                    <span class="px-4 py-1.5 bg-dark-secondary border border-gold/30 text-gold text-[11px] font-black uppercase tracking-widest rounded-xl shadow-sm">
                         Total: Rp {{ number_format($order->total_amount, 0, ',', '.') }}
                     </span>
                 </div>
@@ -28,9 +28,9 @@
             <div class="space-y-6">
 
                 {{-- Ringkasan Pesanan --}}
-                <div class="bg-white rounded-2xl border border-[#FFD1DC]/40 shadow-sm p-6">
-                    <h2 class="text-base font-black text-gray-800 mb-4 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-[#E86FA3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="bg-dark-secondary rounded-2xl border border-border-subtle shadow-sm p-6">
+                    <h2 class="text-base font-black text-warm-white mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                         </svg>
@@ -38,19 +38,19 @@
                     </h2>
 
                     {{-- Items --}}
-                    <div class="divide-y divide-[#FFD1DC]/30 mb-4">
+                    <div class="divide-y divide-border-subtle mb-4">
                         @foreach ($order->items as $item)
                             <div class="flex items-start gap-3 py-3 first:pt-0 last:pb-0">
                                 <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-bold text-gray-800">{{ $item->product_name }}</p>
+                                    <p class="text-sm font-bold text-warm-white">{{ $item->product_name }}</p>
                                     @if ($item->variant_name)
-                                        <p class="text-xs text-slate-400 mt-0.5">Varian: {{ $item->variant_name }}</p>
+                                        <p class="text-xs text-warm-muted mt-0.5">Varian: {{ $item->variant_name }}</p>
                                     @endif
-                                    <p class="text-xs text-slate-400 mt-0.5">
+                                    <p class="text-xs text-warm-muted mt-0.5">
                                         {{ $item->quantity }} × Rp {{ number_format($item->price, 0, ',', '.') }}
                                     </p>
                                 </div>
-                                <p class="text-sm font-extrabold text-gray-800 shrink-0">
+                                <p class="text-sm font-extrabold text-warm-white shrink-0">
                                     Rp {{ number_format($item->subtotal, 0, ',', '.') }}
                                 </p>
                             </div>
@@ -58,29 +58,29 @@
                     </div>
 
                     {{-- Detail harga --}}
-                    <div class="border-t border-[#FFD1DC]/30 pt-4 space-y-2 text-sm">
-                        <div class="flex justify-between text-slate-600">
+                    <div class="border-t border-gold/30/30 pt-4 space-y-2 text-sm">
+                        <div class="flex justify-between text-warm-gray">
                             <span>Subtotal Produk</span>
-                            <span class="font-bold text-gray-800">Rp {{ number_format($order->subtotal, 0, ',', '.') }}</span>
+                            <span class="font-bold text-warm-white">Rp {{ number_format($order->subtotal, 0, ',', '.') }}</span>
                         </div>
-                        <div class="flex justify-between text-slate-600">
+                        <div class="flex justify-between text-warm-gray">
                             <span>Ongkos Kirim ({{ strtoupper($order->courier_name) }} {{ $order->courier_service }})</span>
-                            <span class="font-bold text-gray-800">Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}</span>
+                            <span class="font-bold text-warm-white">Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}</span>
                         </div>
                         @if ($order->discount_amount > 0)
                             <div class="flex justify-between text-green-600">
                                 <span>
                                     Diskon Voucher
                                     @if ($order->voucher)
-                                        <span class="text-xs text-slate-400">({{ $order->voucher->code }})</span>
+                                        <span class="text-xs text-warm-muted">({{ $order->voucher->code }})</span>
                                     @endif
                                 </span>
                                 <span class="font-bold">- Rp {{ number_format($order->discount_amount, 0, ',', '.') }}</span>
                             </div>
                         @endif
-                        <div class="border-t border-[#FFD1DC]/30 pt-3 mt-1 flex justify-between font-black text-gray-800 text-base">
+                        <div class="border-t border-gold/30/30 pt-3 mt-1 flex justify-between font-black text-warm-white text-base">
                             <span>Total Pembayaran</span>
-                            <span class="text-[#E86FA3]">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
+                            <span class="text-gold">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
                         </div>
                     </div>
                 </div>
@@ -102,40 +102,40 @@
                 @endif
 
                 {{-- Metode Pembayaran Tersedia --}}
-                <div class="bg-white rounded-2xl border border-[#FFD1DC]/40 shadow-sm p-6">
-                    <h2 class="text-base font-black text-gray-800 mb-4 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-[#E86FA3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="bg-dark-secondary rounded-2xl border border-border-subtle shadow-sm p-6">
+                    <h2 class="text-base font-black text-warm-white mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                         </svg>
                         Metode Pembayaran Tersedia
                     </h2>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs text-center text-slate-600">
-                        <div class="p-3 bg-gray-50 rounded-lg border border-[#FFD1DC]/30">
-                            <p class="font-bold text-gray-800 mb-1">Virtual Account</p>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs text-center text-warm-gray">
+                        <div class="p-3 bg-dark-tertiary rounded-lg border border-gold/30/30">
+                            <p class="font-bold text-warm-white mb-1">Virtual Account</p>
                             <p>BCA, BNI, BRI,<br>Mandiri, Permata</p>
                         </div>
-                        <div class="p-3 bg-gray-50 rounded-lg border border-[#FFD1DC]/30">
-                            <p class="font-bold text-gray-800 mb-1">E-Wallet</p>
+                        <div class="p-3 bg-dark-tertiary rounded-lg border border-gold/30/30">
+                            <p class="font-bold text-warm-white mb-1">E-Wallet</p>
                             <p>GoPay, OVO,<br>Dana, ShopeePay</p>
                         </div>
-                        <div class="p-3 bg-gray-50 rounded-lg border border-[#FFD1DC]/30">
-                            <p class="font-bold text-gray-800 mb-1">Kartu Kredit</p>
+                        <div class="p-3 bg-dark-tertiary rounded-lg border border-gold/30/30">
+                            <p class="font-bold text-warm-white mb-1">Kartu Kredit</p>
                             <p>Visa, Mastercard,<br>JCB, Amex</p>
                         </div>
-                        <div class="p-3 bg-gray-50 rounded-lg border border-[#FFD1DC]/30">
-                            <p class="font-bold text-gray-800 mb-1">QRIS</p>
+                        <div class="p-3 bg-dark-tertiary rounded-lg border border-gold/30/30">
+                            <p class="font-bold text-warm-white mb-1">QRIS</p>
                             <p>Semua aplikasi<br>pembayaran QRIS</p>
                         </div>
                     </div>
                 </div>
 
                 {{-- Tombol Bayar --}}
-                <div x-data="paymentHandler()" class="bg-white rounded-2xl border border-[#FFD1DC]/40 shadow-sm p-6">
+                <div x-data="paymentHandler()" class="bg-dark-secondary rounded-2xl border border-border-subtle shadow-sm p-6">
                     <div x-show="errorMessage" x-text="errorMessage" class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm"></div>
 
                     <button type="button" @click="pay" :disabled="loading"
-                        class="w-full py-4 bg-[#E86FA3] text-white rounded-xl font-extrabold text-base hover:bg-[#d45a92] transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-md">
+                        class="w-full py-4 bg-gold text-white rounded-xl font-extrabold text-base hover:bg-[#d45a92] transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-md">
                         <svg x-show="loading" class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
@@ -147,17 +147,17 @@
                         <span x-text="loading ? 'Memuat...' : 'Bayar Sekarang'">Bayar Sekarang</span>
                     </button>
 
-                    <p class="text-xs text-center text-slate-400 mt-3">
+                    <p class="text-xs text-center text-warm-muted mt-3">
                         Pembayaran diproses secara aman melalui Midtrans
                     </p>
 
                     <button type="button" @click="refresh" :disabled="loading"
-                        class="mt-3 w-full py-3 border border-[#FFD1DC] text-gray-700 rounded-xl font-semibold text-sm hover:bg-gray-50 hover:border-[#E86FA3] transition disabled:opacity-60 disabled:cursor-not-allowed">
+                        class="mt-3 w-full py-3 border border-gold/30 text-warm-white rounded-xl font-semibold text-sm hover:bg-dark-tertiary hover:border-gold transition disabled:opacity-60 disabled:cursor-not-allowed">
                         Ganti Metode Pembayaran
                     </button>
 
                     <a href="{{ route('orders.show', $order->id) }}"
-                        class="mt-3 block w-full py-2.5 border border-[#FFD1DC] text-gray-700 rounded-xl font-medium text-center text-sm hover:bg-gray-50 hover:border-[#E86FA3] transition">
+                        class="mt-3 block w-full py-2.5 border border-gold/30 text-warm-white rounded-xl font-medium text-center text-sm hover:bg-dark-tertiary hover:border-gold transition">
                         Kembali ke Detail Pesanan
                     </a>
                 </div>

@@ -1,3 +1,128 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    :root {
+        /* ═══════════════════════════════════════════
+           Luxe Rose Gold & Dark — Beutify Palette
+           ═══════════════════════════════════════════ */
+
+        /* Backgrounds */
+        --bg-primary: #0F0F14;
+        --bg-secondary: #1A1A24;
+        --bg-tertiary: #24243A;
+        --bg-elevated: #1E1E2E;
+
+        /* Borders */
+        --border-subtle: #2A2A3E;
+        --border-accent: rgba(200, 149, 108, 0.25);
+        --border-strong: rgba(200, 149, 108, 0.45);
+
+        /* Text */
+        --text-primary: #F0ECE6;
+        --text-secondary: #9B97A0;
+        --text-muted: #5E5A66;
+        --text-inverse: #0F0F14;
+
+        /* Accent — Rose Gold */
+        --accent: #C8956C;
+        --accent-light: #D4A87C;
+        --accent-dark: #A87A55;
+        --accent-glow: rgba(200, 149, 108, 0.12);
+        --accent-glow-strong: rgba(200, 149, 108, 0.25);
+
+        /* Accent — Pink (secondary) */
+        --accent-pink: #E86FA3;
+        --accent-pink-glow: rgba(232, 111, 163, 0.2);
+
+        /* Surface for cards, inputs */
+        --surface: #1A1A24;
+        --surface-hover: #22223A;
+        --surface-active: #2A2A42;
+
+        /* Functional */
+        --success: #4ADE80;
+        --warning: #FBBF24;
+        --danger: #F87171;
+        --info: #60A5FA;
+    }
+
+    /* Smooth scrollbar for dark theme */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+        background: var(--bg-primary);
+    }
+    ::-webkit-scrollbar-thumb {
+        background: var(--border-subtle);
+        border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--accent);
+    }
+
+    /* Custom selection color */
+    ::selection {
+        background: var(--accent-glow-strong);
+        color: var(--text-primary);
+    }
+}
+
+@layer components {
+    /* Rose gold gradient button */
+    .btn-gold {
+        background: linear-gradient(135deg, #C8956C, #D4A87C, #E8C4A0);
+        color: #0F0F14;
+        font-weight: 800;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 15px rgba(200, 149, 108, 0.3);
+    }
+    .btn-gold:hover {
+        box-shadow: 0 6px 25px rgba(200, 149, 108, 0.45);
+        transform: translateY(-1px);
+        filter: brightness(1.05);
+    }
+
+    /* Glassmorphism dark surface */
+    .glass-dark {
+        background: rgba(26, 26, 36, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--border-subtle);
+    }
+
+    /* Rose gold text glow */
+    .text-glow {
+        text-shadow: 0 0 20px rgba(200, 149, 108, 0.3);
+    }
+
+    /* Card with subtle gold border glow */
+    .card-luxe {
+        background: var(--surface);
+        border: 1px solid var(--border-subtle);
+        transition: all 0.3s ease;
+    }
+    .card-luxe:hover {
+        border-color: var(--border-accent);
+        box-shadow: 0 8px 30px rgba(200, 149, 108, 0.08), 0 0 0 1px rgba(200, 149, 108, 0.1);
+    }
+
+    /* Dark input styling */
+    .input-dark {
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-subtle);
+        color: var(--text-primary);
+        transition: all 0.2s ease;
+    }
+    .input-dark::placeholder {
+        color: var(--text-muted);
+    }
+    .input-dark:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-glow);
+        outline: none;
+    }
+}

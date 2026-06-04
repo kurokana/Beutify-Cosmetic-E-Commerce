@@ -1,12 +1,12 @@
-<x-admin-layout>
+﻿<x-admin-layout>
     <x-slot name="pageTitle">Manajemen Produk</x-slot>
 
     <div class="space-y-6">
         {{-- Header --}}
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h2 class="text-2xl font-bold text-gray-900">Produk</h2>
-                <p class="mt-1 text-sm text-gray-600">Kelola semua produk di toko Anda</p>
+                <h2 class="text-2xl font-bold text-warm-white">Produk</h2>
+                <p class="mt-1 text-sm text-warm-gray">Kelola semua produk di toko Anda</p>
             </div>
             <a
                 href="{{ route('admin.products.create') }}"
@@ -20,37 +20,37 @@
         </div>
 
         {{-- Products Table --}}
-        <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="bg-dark-secondary rounded-lg shadow overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
+                    <thead class="bg-dark-tertiary">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-warm-gray uppercase tracking-wider">
                                 Produk
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-warm-gray uppercase tracking-wider">
                                 Merek
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-warm-gray uppercase tracking-wider">
                                 Kategori
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-warm-gray uppercase tracking-wider">
                                 Harga
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-warm-gray uppercase tracking-wider">
                                 Stok
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-warm-gray uppercase tracking-wider">
                                 Status
                             </th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-warm-gray uppercase tracking-wider">
                                 Aksi
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody class="bg-dark-secondary divide-y divide-gray-200">
                         @forelse ($products as $product)
-                            <tr class="hover:bg-gray-50 transition-colors">
+                            <tr class="hover:bg-dark-tertiary transition-colors">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <div class="flex-shrink-0 h-12 w-12">
@@ -62,35 +62,35 @@
                                                 >
                                             @else
                                                 <div class="h-12 w-12 rounded-lg bg-gray-200 flex items-center justify-center">
-                                                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <svg class="w-6 h-6 text-warm-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                                     </svg>
                                                 </div>
                                             @endif
                                         </div>
                                         <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900">
+                                            <div class="text-sm font-medium text-warm-white">
                                                 {{ $product->name }}
                                             </div>
-                                            <div class="text-sm text-gray-500">
+                                            <div class="text-sm text-warm-gray">
                                                 SKU: {{ $product->sku }}
                                             </div>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">{{ $product->brand->name }}</div>
+                                    <div class="text-sm text-warm-white">{{ $product->brand->name }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">{{ $product->category->name }}</div>
+                                    <div class="text-sm text-warm-white">{{ $product->category->name }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">
+                                    <div class="text-sm font-medium text-warm-white">
                                         Rp {{ number_format($product->price, 0, ',', '.') }}
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">
+                                    <div class="text-sm text-warm-white">
                                         {{ $product->stock }} unit
                                     </div>
                                 </td>
@@ -104,7 +104,7 @@
                                         @method('PATCH')
                                         <button
                                             type="submit"
-                                            class="inline-flex items-center px-2.5 py-1.5 text-xs font-medium rounded-full transition-colors {{ $product->is_active ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-gray-100 text-gray-800 hover:bg-gray-200' }}"
+                                            class="inline-flex items-center px-2.5 py-1.5 text-xs font-medium rounded-full transition-colors {{ $product->is_active ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-dark-tertiary text-warm-white hover:bg-gray-200' }}"
                                         >
                                             {{ $product->is_active ? 'Aktif' : 'Nonaktif' }}
                                         </button>
@@ -146,10 +146,10 @@
                             <tr>
                                 <td colspan="7" class="px-6 py-12 text-center">
                                     <div class="flex flex-col items-center justify-center">
-                                        <svg class="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-12 h-12 text-warm-muted mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
                                         </svg>
-                                        <p class="text-gray-500 text-sm">Belum ada produk</p>
+                                        <p class="text-warm-gray text-sm">Belum ada produk</p>
                                         <a
                                             href="{{ route('admin.products.create') }}"
                                             class="mt-4 text-pink-600 hover:text-pink-700 text-sm font-medium"
@@ -166,7 +166,7 @@
 
             {{-- Pagination --}}
             @if ($products->hasPages())
-                <div class="px-6 py-4 border-t border-gray-200">
+                <div class="px-6 py-4 border-t border-border-subtle">
                     {{ $products->links() }}
                 </div>
             @endif

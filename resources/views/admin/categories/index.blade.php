@@ -1,12 +1,12 @@
-<x-admin-layout>
+﻿<x-admin-layout>
     <x-slot name="pageTitle">Manajemen Kategori</x-slot>
 
     <div class="space-y-6">
         {{-- Header --}}
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h2 class="text-2xl font-bold text-gray-900">Kategori</h2>
-                <p class="mt-1 text-sm text-gray-600">Kelola semua kategori produk di toko Anda</p>
+                <h2 class="text-2xl font-bold text-warm-white">Kategori</h2>
+                <p class="mt-1 text-sm text-warm-gray">Kelola semua kategori produk di toko Anda</p>
             </div>
             <a
                 href="{{ route('admin.categories.create') }}"
@@ -20,39 +20,39 @@
         </div>
 
         {{-- Categories Table --}}
-        <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="bg-dark-secondary rounded-lg shadow overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
+                    <thead class="bg-dark-tertiary">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-warm-gray uppercase tracking-wider">
                                 Kategori
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-warm-gray uppercase tracking-wider">
                                 Jumlah Produk
                             </th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-warm-gray uppercase tracking-wider">
                                 Aksi
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody class="bg-dark-secondary divide-y divide-gray-200">
                         @forelse ($categories as $category)
-                            <tr class="hover:bg-gray-50 transition-colors">
+                            <tr class="hover:bg-dark-tertiary transition-colors">
                                 <td class="px-6 py-4">
                                     <div>
-                                        <div class="text-sm font-medium text-gray-900">
+                                        <div class="text-sm font-medium text-warm-white">
                                             {{ $category->name }}
                                         </div>
                                         @if ($category->description)
-                                            <div class="text-sm text-gray-500 max-w-md">
+                                            <div class="text-sm text-warm-gray max-w-md">
                                                 {{ $category->description }}
                                             </div>
                                         @endif
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">
+                                    <div class="text-sm text-warm-white">
                                         {{ $category->products_count }} produk aktif
                                     </div>
                                 </td>
@@ -92,10 +92,10 @@
                             <tr>
                                 <td colspan="3" class="px-6 py-12 text-center">
                                     <div class="flex flex-col items-center justify-center">
-                                        <svg class="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-12 h-12 text-warm-muted mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
                                         </svg>
-                                        <p class="text-gray-500 text-sm">Belum ada kategori</p>
+                                        <p class="text-warm-gray text-sm">Belum ada kategori</p>
                                         <a
                                             href="{{ route('admin.categories.create') }}"
                                             class="mt-4 text-pink-600 hover:text-pink-700 text-sm font-medium"
@@ -112,7 +112,7 @@
 
             {{-- Pagination --}}
             @if ($categories->hasPages())
-                <div class="px-6 py-4 border-t border-gray-200">
+                <div class="px-6 py-4 border-t border-border-subtle">
                     {{ $categories->links() }}
                 </div>
             @endif

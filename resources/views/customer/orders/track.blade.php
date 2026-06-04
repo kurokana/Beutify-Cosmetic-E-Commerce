@@ -1,15 +1,15 @@
-<x-app-layout>
-    <div class="py-12 bg-[#FFF9FB] min-h-screen">
+﻿<x-app-layout>
+    <div class="py-12 bg-dark-primary min-h-screen">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
 
             {{-- Header seperti halaman Katalog --}}
-            <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 border-b border-[#FFD1DC]/40 pb-6 gap-4">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 border-b border-border-subtle pb-6 gap-4">
                 <div>
                     <h1 class="text-3xl md:text-2xl font-black tracking-tight leading-tight">
-                        <span class="text-[#89CFF0]">Lacak</span>
-                        <span class="text-[#E86FA3]">Pesanan</span>
+                        <span class="text-gold-light">Lacak</span>
+                        <span class="text-gold">Pesanan</span>
                     </h1>
-                    <p class="text-slate-400 text-sm mt-1 font-medium">{{ $order->order_number }}</p>
+                    <p class="text-warm-muted text-sm mt-1 font-medium">{{ $order->order_number }}</p>
                 </div>
             </div>
 
@@ -37,9 +37,9 @@
                 </div>
             @elseif ($tracking && $tracking['found'])
                 {{-- Informasi Paket --}}
-                <div class="bg-white rounded-2xl border border-[#FFD1DC]/40 shadow-sm p-6 mb-5">
-                    <h2 class="text-base font-black text-gray-800 mb-4 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-[#E86FA3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="bg-dark-secondary rounded-2xl border border-border-subtle shadow-sm p-6 mb-5">
+                    <h2 class="text-base font-black text-warm-white mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                         </svg>
@@ -47,22 +47,22 @@
                     </h2>
                     <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm">
                         <div>
-                            <dt class="text-slate-400 font-medium">Nomor Resi</dt>
-                            <dd class="font-bold font-mono text-gray-800 mt-0.5">{{ $tracking['waybill'] ?: $order->shipping_tracking_number }}</dd>
+                            <dt class="text-warm-muted font-medium">Nomor Resi</dt>
+                            <dd class="font-bold font-mono text-warm-white mt-0.5">{{ $tracking['waybill'] ?: $order->shipping_tracking_number }}</dd>
                         </div>
                         <div>
-                            <dt class="text-slate-400 font-medium">Kurir</dt>
-                            <dd class="font-bold text-gray-800 mt-0.5">{{ strtoupper($tracking['courier'] ?: $order->courier_name) }} @if($tracking['service'])<span class="font-normal text-slate-500"> — {{ $tracking['service'] }}</span>@endif</dd>
+                            <dt class="text-warm-muted font-medium">Kurir</dt>
+                            <dd class="font-bold text-warm-white mt-0.5">{{ strtoupper($tracking['courier'] ?: $order->courier_name) }} @if($tracking['service'])<span class="font-normal text-warm-gray"> — {{ $tracking['service'] }}</span>@endif</dd>
                         </div>
                         @if ($tracking['receiver_name'])
                             <div>
-                                <dt class="text-slate-400 font-medium">Penerima</dt>
-                                <dd class="font-bold text-gray-800 mt-0.5">{{ $tracking['receiver_name'] }}</dd>
+                                <dt class="text-warm-muted font-medium">Penerima</dt>
+                                <dd class="font-bold text-warm-white mt-0.5">{{ $tracking['receiver_name'] }}</dd>
                             </div>
                         @endif
                         @if ($tracking['status'])
                             <div>
-                                <dt class="text-slate-400 font-medium">Status Terkini</dt>
+                                <dt class="text-warm-muted font-medium">Status Terkini</dt>
                                 <dd class="mt-0.5"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800">{{ $tracking['status'] }}</span></dd>
                             </div>
                         @endif
@@ -70,16 +70,16 @@
                 </div>
 
                 {{-- Riwayat Pengiriman --}}
-                <div class="bg-white rounded-2xl border border-[#FFD1DC]/40 shadow-sm p-6">
-                    <h2 class="text-base font-black text-gray-800 mb-5 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-[#E86FA3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="bg-dark-secondary rounded-2xl border border-border-subtle shadow-sm p-6">
+                    <h2 class="text-base font-black text-warm-white mb-5 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                         </svg>
                         Riwayat Pengiriman
                     </h2>
                     @if (!empty($tracking['manifest']))
-                        <ol class="relative border-l border-[#FFD1DC] ml-3 space-y-0">
+                        <ol class="relative border-l border-gold/30 ml-3 space-y-0">
                             @foreach ($tracking['manifest'] as $index => $event)
                                 <li class="mb-6 ml-6 last:mb-0">
                                     <span class="absolute -left-3 flex items-center justify-center w-6 h-6 rounded-full {{ $index === 0 ? 'bg-indigo-600' : 'bg-gray-200' }}">
@@ -93,29 +93,29 @@
                                             <span class="w-2 h-2 rounded-full bg-gray-400"></span>
                                         @endif
                                     </span>
-                                    <div class="{{ $index === 0 ? 'bg-indigo-50 border border-indigo-100' : 'bg-gray-50 border border-gray-100' }} rounded-lg p-3">
-                                        <p class="text-sm font-bold {{ $index === 0 ? 'text-indigo-900' : 'text-gray-800' }}">
+                                    <div class="{{ $index === 0 ? 'bg-indigo-50 border border-indigo-100' : 'bg-dark-tertiary border border-border-subtle' }} rounded-lg p-3">
+                                        <p class="text-sm font-bold {{ $index === 0 ? 'text-indigo-900' : 'text-warm-white' }}">
                                             {{ $event['manifest_description'] ?? $event['description'] ?? '-' }}
                                         </p>
-                                        <time class="text-xs {{ $index === 0 ? 'text-indigo-600' : 'text-gray-500' }} mt-1 block">
+                                        <time class="text-xs {{ $index === 0 ? 'text-indigo-600' : 'text-warm-gray' }} mt-1 block">
                                             {{ $event['manifest_date'] ?? $event['date'] ?? '' }}{{ isset($event['manifest_date']) && isset($event['manifest_time']) ? ', ' : '' }}{{ $event['manifest_time'] ?? $event['time'] ?? '' }}
                                         </time>
                                         @if (!empty($event['city_name']))
-                                            <p class="text-xs text-gray-500 mt-0.5">{{ $event['city_name'] }}</p>
+                                            <p class="text-xs text-warm-gray mt-0.5">{{ $event['city_name'] }}</p>
                                         @endif
                                     </div>
                                 </li>
                             @endforeach
                         </ol>
                     @else
-                        <p class="text-sm text-slate-400 text-center py-4">Belum ada riwayat pengiriman yang tersedia.</p>
+                        <p class="text-sm text-warm-muted text-center py-4">Belum ada riwayat pengiriman yang tersedia.</p>
                     @endif
                 </div>
             @endif
 
             <div class="flex gap-3 mt-5">
                 <a href="{{ route('orders.show', $order->id) }}"
-                    class="inline-flex items-center gap-2 px-5 py-2.5 border border-[#FFD1DC] text-gray-700 rounded-xl font-medium hover:bg-gray-50 hover:border-[#E86FA3] transition text-sm">
+                    class="inline-flex items-center gap-2 px-5 py-2.5 border border-gold/30 text-warm-white rounded-xl font-medium hover:bg-dark-tertiary hover:border-gold transition text-sm">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>

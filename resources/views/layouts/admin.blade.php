@@ -9,14 +9,14 @@
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800&display=swap" rel="stylesheet" />
 
         <!-- Scripts & Styles -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
         @stack('styles')
     </head>
-    <body class="font-sans antialiased bg-[#FFF8FB] text-slate-900">
+    <body class="font-sans antialiased bg-dark-primary text-warm-white">
 
         <div x-data="{ sidebarOpen: false }" class="flex h-screen overflow-hidden">
 
@@ -30,38 +30,38 @@
                 x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0"
                 @click="sidebarOpen = false"
-                class="fixed inset-0 z-20 bg-black bg-opacity-50 lg:hidden"
+                class="fixed inset-0 z-20 bg-black/60 lg:hidden"
                 aria-hidden="true"
             ></div>
 
             {{-- Sidebar --}}
             <aside
                 :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-                class="fixed inset-y-0 left-0 z-30 w-64 bg-white text-slate-900 transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-0 flex flex-col shadow-lg border-r border-[#FFD1DC]/30"
+                class="fixed inset-y-0 left-0 z-30 w-64 bg-dark-secondary text-warm-white transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-0 flex flex-col shadow-lg border-r border-border-subtle"
                 aria-label="Navigasi admin"
             >
                 {{-- Sidebar Header --}}
-                <div class="flex items-center justify-between h-16 px-6 border-b border-[#FFD1DC]/40 flex-shrink-0">
+                <div class="flex items-center justify-between h-16 px-6 border-b border-border-subtle flex-shrink-0">
                     <a href="{{ \Illuminate\Support\Facades\Route::has('admin.dashboard') ? route('admin.dashboard') : '#' }}" class="flex items-center gap-2.5 group">
                         {{-- Logo Beutify --}}
                         <div class="relative">
                             <svg class="w-10 h-10" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="20" cy="15" r="6" fill="#FFD1DC"/>
-                                <circle cx="14" cy="22" r="6" fill="#F8BBD0"/>
-                                <circle cx="26" cy="22" r="6" fill="#F8BBD0"/>
-                                <circle cx="14" cy="22" r="6" fill="#89CFF0" opacity="0.5"/>
-                                <circle cx="26" cy="22" r="6" fill="#89CFF0" opacity="0.5"/>
-                                <circle cx="20" cy="20" r="3" fill="#E86FA3"/>
+                                <circle cx="20" cy="15" r="6" fill="#C8956C" opacity="0.6"/>
+                                <circle cx="14" cy="22" r="6" fill="#D4A87C" opacity="0.4"/>
+                                <circle cx="26" cy="22" r="6" fill="#D4A87C" opacity="0.4"/>
+                                <circle cx="14" cy="22" r="6" fill="#A87A55" opacity="0.3"/>
+                                <circle cx="26" cy="22" r="6" fill="#A87A55" opacity="0.3"/>
+                                <circle cx="20" cy="20" r="3" fill="#C8956C"/>
                             </svg>
                         </div>
                         <div class="leading-tight">
-                            <h2 class="text-sm font-extrabold text-[#E86FA3] group-hover:text-[#D9578F] transition">Beutify</h2>
-                            <p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Admin</p>
+                            <h2 class="text-sm font-extrabold text-gold group-hover:text-gold-light transition">Beutify</h2>
+                            <p class="text-[10px] uppercase tracking-widest text-warm-muted font-bold">Admin</p>
                         </div>
                     </a>
                     <button
                         @click="sidebarOpen = false"
-                        class="lg:hidden text-gray-400 hover:text-white transition-colors"
+                        class="lg:hidden text-warm-muted hover:text-warm-white transition-colors"
                         aria-label="Tutup sidebar"
                     >
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -95,7 +95,7 @@
                                 @if ($routeExists)
                                     <a
                                         href="{{ route($item['route']) }}"
-                                        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors {{ $isActive ? 'bg-[#E86FA3] text-white' : 'text-slate-600 hover:bg-[#FFF0F6] hover:text-[#E86FA3]' }}"
+                                        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors {{ $isActive ? 'bg-gold/20 text-gold border border-gold/30' : 'text-warm-gray hover:bg-dark-tertiary hover:text-gold' }}"
                                         aria-current="{{ $isActive ? 'page' : 'false' }}"
                                     >
                                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -104,7 +104,7 @@
                                         {{ $item['label'] }}
                                     </a>
                                 @else
-                                    <span class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-500 cursor-not-allowed">
+                                    <span class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-warm-muted cursor-not-allowed">
                                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}"/>
                                         </svg>
@@ -117,8 +117,8 @@
                 </nav>
 
                 {{-- Sidebar Footer --}}
-                <div class="flex-shrink-0 border-t border-gray-700 p-4">
-                    <a href="{{ route('catalog.index') }}" class="flex items-center gap-2 text-xs text-gray-400 hover:text-white transition-colors">
+                <div class="flex-shrink-0 border-t border-border-subtle p-4">
+                    <a href="{{ route('catalog.index') }}" class="flex items-center gap-2 text-xs text-warm-muted hover:text-gold transition-colors">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
                         </svg>
@@ -131,11 +131,11 @@
             <div class="flex-1 flex flex-col overflow-hidden">
 
                 {{-- Top Header Bar --}}
-                <header class="bg-white border-b border-[#FFD1DC]/40 h-16 flex items-center justify-between px-4 sm:px-6 flex-shrink-0">
+                <header class="bg-dark-secondary border-b border-border-subtle h-16 flex items-center justify-between px-4 sm:px-6 flex-shrink-0">
                     {{-- Mobile: Hamburger --}}
                     <button
                         @click="sidebarOpen = true"
-                        class="lg:hidden p-2 rounded-md text-slate-500 hover:text-slate-700 hover:bg-[#FFF0F6] transition-colors focus:outline-none focus:ring-2 focus:ring-[#E86FA3]"
+                        class="lg:hidden p-2 rounded-md text-warm-gray hover:text-gold hover:bg-dark-tertiary transition-colors focus:outline-none focus:ring-2 focus:ring-gold/40"
                         aria-label="Buka sidebar"
                     >
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -146,26 +146,26 @@
                     {{-- Page Title (optional slot) --}}
                     <div class="hidden lg:block">
                         @isset($pageTitle)
-                            <h1 class="text-lg font-semibold text-gray-800">{{ $pageTitle }}</h1>
+                            <h1 class="text-lg font-semibold text-warm-white">{{ $pageTitle }}</h1>
                         @endisset
                     </div>
 
                     {{-- Admin Account --}}
                     <div class="flex items-center gap-4 ml-auto">
                         <div class="text-right hidden sm:block">
-                            <p class="text-sm font-semibold text-gray-800">{{ Auth::user()->name ?? 'Admin' }}</p>
-                            <p class="text-xs text-gray-500">Administrator</p>
+                            <p class="text-sm font-semibold text-warm-white">{{ Auth::user()->name ?? 'Admin' }}</p>
+                            <p class="text-xs text-warm-muted">Administrator</p>
                         </div>
 
                         <div class="relative" x-data="{ open: false }" @click.outside="open = false">
                             <button
                                 @click="open = !open"
-                                class="w-9 h-9 bg-gradient-to-br from-[#F8BBD0] to-[#89CFF0] rounded-full flex items-center justify-center hover:from-[#F8A0C2] hover:to-[#7CC1F7] transition-colors focus:outline-none focus:ring-2 focus:ring-[#E86FA3]"
+                                class="w-9 h-9 bg-gradient-to-br from-gold to-gold-dark rounded-full flex items-center justify-center hover:from-gold-light hover:to-gold transition-colors focus:outline-none focus:ring-2 focus:ring-gold/40"
                                 aria-haspopup="true"
                                 :aria-expanded="open"
                                 aria-label="Menu akun admin"
                             >
-                                <span class="text-pink-600 font-semibold text-sm">
+                                <span class="text-dark-primary font-semibold text-sm">
                                     {{ substr(Auth::user()->name ?? 'A', 0, 1) }}
                                 </span>
                             </button>
@@ -178,12 +178,12 @@
                                 x-transition:leave="transition ease-in duration-100"
                                 x-transition:leave-start="opacity-100 scale-100"
                                 x-transition:leave-end="opacity-0 scale-95"
-                                class="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-50"
+                                class="absolute right-0 top-full mt-2 w-48 bg-dark-elevated rounded-lg shadow-lg border border-border-subtle py-2 z-50"
                                 role="menu"
                             >
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
-                                    <button type="submit" class="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors text-left" role="menuitem">
+                                    <button type="submit" class="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 transition-colors text-left" role="menuitem">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                                         </svg>

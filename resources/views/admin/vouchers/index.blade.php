@@ -1,12 +1,12 @@
-<x-admin-layout>
+﻿<x-admin-layout>
     <x-slot name="pageTitle">Manajemen Voucher</x-slot>
 
     <div class="space-y-6">
         {{-- Header --}}
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h2 class="text-2xl font-bold text-gray-900">Voucher</h2>
-                <p class="mt-1 text-sm text-gray-600">Kelola semua voucher diskon di toko Anda</p>
+                <h2 class="text-2xl font-bold text-warm-white">Voucher</h2>
+                <p class="mt-1 text-sm text-warm-gray">Kelola semua voucher diskon di toko Anda</p>
             </div>
             <a
                 href="{{ route('admin.vouchers.create') }}"
@@ -20,54 +20,54 @@
         </div>
 
         {{-- Vouchers Table --}}
-        <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="bg-dark-secondary rounded-lg shadow overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
+                    <thead class="bg-dark-tertiary">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-warm-gray uppercase tracking-wider">
                                 Kode
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-warm-gray uppercase tracking-wider">
                                 Tipe & Nilai
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-warm-gray uppercase tracking-wider">
                                 Penggunaan
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-warm-gray uppercase tracking-wider">
                                 Status
                             </th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-warm-gray uppercase tracking-wider">
                                 Aksi
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody class="bg-dark-secondary divide-y divide-gray-200">
                         @forelse ($vouchers as $voucher)
-                            <tr class="hover:bg-gray-50 transition-colors">
+                            <tr class="hover:bg-dark-tertiary transition-colors">
                                 <td class="px-6 py-4">
                                     <div>
-                                        <div class="text-sm font-bold text-gray-900 font-mono">
+                                        <div class="text-sm font-bold text-warm-white font-mono">
                                             {{ $voucher->code }}
                                         </div>
-                                        <div class="text-xs text-gray-500 mt-1">
+                                        <div class="text-xs text-warm-gray mt-1">
                                             Min. Pembelian: Rp {{ number_format($voucher->minimum_purchase, 0, ',', '.') }}
                                         </div>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">
+                                    <div class="text-sm text-warm-white">
                                         @if ($voucher->type === 'percentage')
                                             <span class="font-semibold text-pink-600">{{ $voucher->value }}%</span>
-                                            <span class="text-gray-500">Diskon</span>
+                                            <span class="text-warm-gray">Diskon</span>
                                         @else
                                             <span class="font-semibold text-pink-600">Rp {{ number_format($voucher->value, 0, ',', '.') }}</span>
-                                            <span class="text-gray-500">Potongan</span>
+                                            <span class="text-warm-gray">Potongan</span>
                                         @endif
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">
+                                    <div class="text-sm text-warm-white">
                                         {{ $voucher->used_count }}
                                         @if ($voucher->max_usage)
                                             / {{ $voucher->max_usage }}
@@ -96,11 +96,11 @@
                                                 Habis
                                             </span>
                                         @else
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-dark-tertiary text-warm-white">
                                                 Nonaktif
                                             </span>
                                         @endif
-                                        <div class="text-xs text-gray-500">
+                                        <div class="text-xs text-warm-gray">
                                             Exp: {{ $voucher->expires_at->format('d M Y') }}
                                         </div>
                                     </div>
@@ -170,10 +170,10 @@
                             <tr>
                                 <td colspan="5" class="px-6 py-12 text-center">
                                     <div class="flex flex-col items-center justify-center">
-                                        <svg class="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-12 h-12 text-warm-muted mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/>
                                         </svg>
-                                        <p class="text-gray-500 text-sm">Belum ada voucher</p>
+                                        <p class="text-warm-gray text-sm">Belum ada voucher</p>
                                         <a
                                             href="{{ route('admin.vouchers.create') }}"
                                             class="mt-4 text-pink-600 hover:text-pink-700 text-sm font-medium"
@@ -190,7 +190,7 @@
 
             {{-- Pagination --}}
             @if ($vouchers->hasPages())
-                <div class="px-6 py-4 border-t border-gray-200">
+                <div class="px-6 py-4 border-t border-border-subtle">
                     {{ $vouchers->links() }}
                 </div>
             @endif

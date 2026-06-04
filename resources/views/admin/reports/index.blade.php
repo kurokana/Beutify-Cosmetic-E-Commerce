@@ -1,24 +1,24 @@
-<x-admin-layout>
+﻿<x-admin-layout>
     <x-slot name="pageTitle">Laporan Penjualan</x-slot>
 
     {{-- Page Header --}}
     <div class="mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">Laporan Penjualan</h2>
-        <p class="text-gray-500 mt-1">Ringkasan penjualan harian serta rasio uang dan produk masuk/keluar.</p>
+        <h2 class="text-2xl font-bold text-warm-white">Laporan Penjualan</h2>
+        <p class="text-warm-gray mt-1">Ringkasan penjualan harian serta rasio uang dan produk masuk/keluar.</p>
     </div>
 
     {{-- Date Range Filter --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+    <div class="bg-dark-secondary rounded-xl shadow-sm border border-border-subtle p-6 mb-6">
         <form method="GET" action="{{ route('admin.reports.index') }}" class="flex flex-wrap gap-4 items-end">
             <div class="flex-1 min-w-[200px]">
-                <label for="start_date" class="block text-sm font-medium text-gray-700 mb-2">Tanggal Mulai</label>
+                <label for="start_date" class="block text-sm font-medium text-warm-white mb-2">Tanggal Mulai</label>
                 <input type="date" id="start_date" name="start_date" value="{{ $startDate }}"
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                       class="w-full px-4 py-2 border border-border-subtle rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent">
             </div>
             <div class="flex-1 min-w-[200px]">
-                <label for="end_date" class="block text-sm font-medium text-gray-700 mb-2">Tanggal Akhir</label>
+                <label for="end_date" class="block text-sm font-medium text-warm-white mb-2">Tanggal Akhir</label>
                 <input type="date" id="end_date" name="end_date" value="{{ $endDate }}"
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                       class="w-full px-4 py-2 border border-border-subtle rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent">
             </div>
             <div>
                 <button type="submit"
@@ -32,7 +32,7 @@
     {{-- Summary Statistics --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
         {{-- Uang Masuk --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div class="bg-dark-secondary rounded-xl shadow-sm border border-border-subtle p-6">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center flex-shrink-0">
                     <svg class="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -41,14 +41,14 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500 font-medium">Uang Masuk</p>
-                    <p class="text-2xl font-bold text-gray-800">Rp {{ number_format($summary['money_in'], 0, ',', '.') }}</p>
+                    <p class="text-sm text-warm-gray font-medium">Uang Masuk</p>
+                    <p class="text-2xl font-bold text-warm-white">Rp {{ number_format($summary['money_in'], 0, ',', '.') }}</p>
                 </div>
             </div>
         </div>
 
         {{-- Uang Keluar --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div class="bg-dark-secondary rounded-xl shadow-sm border border-border-subtle p-6">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
                     <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -57,14 +57,14 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500 font-medium">Uang Keluar</p>
-                    <p class="text-2xl font-bold text-gray-800">Rp {{ number_format($summary['money_out'], 0, ',', '.') }}</p>
+                    <p class="text-sm text-warm-gray font-medium">Uang Keluar</p>
+                    <p class="text-2xl font-bold text-warm-white">Rp {{ number_format($summary['money_out'], 0, ',', '.') }}</p>
                 </div>
             </div>
         </div>
 
         {{-- Produk Keluar --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div class="bg-dark-secondary rounded-xl shadow-sm border border-border-subtle p-6">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
                     <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -73,14 +73,14 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500 font-medium">Produk Keluar</p>
-                    <p class="text-2xl font-bold text-gray-800">{{ number_format($summary['products_out']) }}</p>
+                    <p class="text-sm text-warm-gray font-medium">Produk Keluar</p>
+                    <p class="text-2xl font-bold text-warm-white">{{ number_format($summary['products_out']) }}</p>
                 </div>
             </div>
         </div>
 
         {{-- Produk Masuk --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div class="bg-dark-secondary rounded-xl shadow-sm border border-border-subtle p-6">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
                     <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -89,8 +89,8 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500 font-medium">Produk Masuk</p>
-                    <p class="text-2xl font-bold text-gray-800">{{ number_format($summary['products_in']) }}</p>
+                    <p class="text-sm text-warm-gray font-medium">Produk Masuk</p>
+                    <p class="text-2xl font-bold text-warm-white">{{ number_format($summary['products_in']) }}</p>
                 </div>
             </div>
         </div>
@@ -98,15 +98,15 @@
 
     {{-- Charts Section --}}
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Rasio Uang Masuk/Keluar</h3>
+        <div class="bg-dark-secondary rounded-xl shadow-sm border border-border-subtle p-6">
+            <h3 class="text-lg font-semibold text-warm-white mb-4">Rasio Uang Masuk/Keluar</h3>
             <div class="h-64">
                 <canvas id="moneyFlowChart"></canvas>
             </div>
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Rasio Produk Keluar/Masuk</h3>
+        <div class="bg-dark-secondary rounded-xl shadow-sm border border-border-subtle p-6">
+            <h3 class="text-lg font-semibold text-warm-white mb-4">Rasio Produk Keluar/Masuk</h3>
             <div class="h-64">
                 <canvas id="productFlowChart"></canvas>
             </div>
@@ -114,29 +114,29 @@
     </div>
 
     {{-- Best Selling Products Table --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">Produk Terlaris</h3>
+    <div class="bg-dark-secondary rounded-xl shadow-sm border border-border-subtle p-6 mb-8">
+        <h3 class="text-lg font-semibold text-warm-white mb-4">Produk Terlaris</h3>
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead>
-                    <tr class="border-b border-gray-200">
-                        <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700">Peringkat</th>
-                        <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700">Nama Produk</th>
-                        <th class="text-right py-3 px-4 text-sm font-semibold text-gray-700">Jumlah Terjual</th>
-                        <th class="text-right py-3 px-4 text-sm font-semibold text-gray-700">Total Pendapatan</th>
+                    <tr class="border-b border-border-subtle">
+                        <th class="text-left py-3 px-4 text-sm font-semibold text-warm-white">Peringkat</th>
+                        <th class="text-left py-3 px-4 text-sm font-semibold text-warm-white">Nama Produk</th>
+                        <th class="text-right py-3 px-4 text-sm font-semibold text-warm-white">Jumlah Terjual</th>
+                        <th class="text-right py-3 px-4 text-sm font-semibold text-warm-white">Total Pendapatan</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($bestSellingProducts as $index => $product)
-                        <tr class="border-b border-gray-100 hover:bg-gray-50">
-                            <td class="py-3 px-4 text-sm text-gray-600">{{ $index + 1 }}</td>
-                            <td class="py-3 px-4 text-sm font-medium text-gray-800">{{ $product['product_name'] }}</td>
-                            <td class="py-3 px-4 text-sm text-gray-600 text-right">{{ number_format($product['total_quantity']) }}</td>
-                            <td class="py-3 px-4 text-sm text-gray-600 text-right">Rp {{ number_format($product['total_revenue'], 0, ',', '.') }}</td>
+                        <tr class="border-b border-border-subtle hover:bg-dark-tertiary">
+                            <td class="py-3 px-4 text-sm text-warm-gray">{{ $index + 1 }}</td>
+                            <td class="py-3 px-4 text-sm font-medium text-warm-white">{{ $product['product_name'] }}</td>
+                            <td class="py-3 px-4 text-sm text-warm-gray text-right">{{ number_format($product['total_quantity']) }}</td>
+                            <td class="py-3 px-4 text-sm text-warm-gray text-right">Rp {{ number_format($product['total_revenue'], 0, ',', '.') }}</td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="py-8 text-center text-gray-500">
+                            <td colspan="4" class="py-8 text-center text-warm-gray">
                                 Tidak ada data produk terlaris untuk periode ini.
                             </td>
                         </tr>
@@ -147,27 +147,27 @@
     </div>
 
     {{-- Daily Sales Table --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">Detail Penjualan Harian</h3>
+    <div class="bg-dark-secondary rounded-xl shadow-sm border border-border-subtle p-6 mb-8">
+        <h3 class="text-lg font-semibold text-warm-white mb-4">Detail Penjualan Harian</h3>
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead>
-                    <tr class="border-b border-gray-200">
-                        <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700">Tanggal</th>
-                        <th class="text-right py-3 px-4 text-sm font-semibold text-gray-700">Jumlah Pesanan</th>
-                        <th class="text-right py-3 px-4 text-sm font-semibold text-gray-700">Total Pendapatan</th>
+                    <tr class="border-b border-border-subtle">
+                        <th class="text-left py-3 px-4 text-sm font-semibold text-warm-white">Tanggal</th>
+                        <th class="text-right py-3 px-4 text-sm font-semibold text-warm-white">Jumlah Pesanan</th>
+                        <th class="text-right py-3 px-4 text-sm font-semibold text-warm-white">Total Pendapatan</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($dailySales['data'] as $day)
-                        <tr class="border-b border-gray-100 hover:bg-gray-50">
-                            <td class="py-3 px-4 text-sm text-gray-800">{{ date('d M Y', strtotime($day['date'])) }}</td>
-                            <td class="py-3 px-4 text-sm text-gray-600 text-right">{{ number_format($day['total_orders']) }}</td>
-                            <td class="py-3 px-4 text-sm text-gray-600 text-right">Rp {{ number_format($day['total_revenue'], 0, ',', '.') }}</td>
+                        <tr class="border-b border-border-subtle hover:bg-dark-tertiary">
+                            <td class="py-3 px-4 text-sm text-warm-white">{{ date('d M Y', strtotime($day['date'])) }}</td>
+                            <td class="py-3 px-4 text-sm text-warm-gray text-right">{{ number_format($day['total_orders']) }}</td>
+                            <td class="py-3 px-4 text-sm text-warm-gray text-right">Rp {{ number_format($day['total_revenue'], 0, ',', '.') }}</td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="3" class="py-8 text-center text-gray-500">
+                            <td colspan="3" class="py-8 text-center text-warm-gray">
                                 Tidak ada data penjualan untuk periode ini.
                             </td>
                         </tr>
