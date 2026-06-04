@@ -1,5 +1,5 @@
-<x-app-layout>
-    <div class="py-12 bg-[#FFF9FB] min-h-screen">
+﻿<x-app-layout>
+    <div class="py-12 bg-transparent min-h-screen">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
             {{-- Header seperti halaman Katalog --}}

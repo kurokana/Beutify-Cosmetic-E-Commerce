@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-[#FFD1DC]/70 shadow-[0_8px_30px_rgba(248,187,208,0.16)]">
+<nav x-data="{ open: false }" class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#FFD1DC]/70 shadow-[0_8px_30px_rgba(248,187,208,0.16)]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div class="flex items-center justify-between min-h-[88px] gap-4">

@@ -1,4 +1,4 @@
-<x-app-layout>
+﻿<x-app-layout>
     <x-slot name="header">
         <nav class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest">
             <a href="{{ route('catalog.index') }}" class="text-slate-400 hover:text-[#E86FA3] transition">Katalog</a>
@@ -7,7 +7,7 @@
         </nav>
     </x-slot>
 
-    <div class="py-12 bg-[#FFF9FB] min-h-screen">
+    <div class="py-12 bg-transparent min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
             {{-- Flash Messages --}}

@@ -1,4 +1,4 @@
-<x-app-layout>
+﻿<x-app-layout>
     <style>
         .beauty-shadow { box-shadow: 0 18px 45px rgba(244, 194, 194, 0.22) !important; }
         .form-beauty-focus:focus { 
@@ -8,7 +8,7 @@
         }
     </style>
 
-    <div class="py-12 bg-[#FFF9FC] min-h-screen">
+    <div class="py-12 bg-transparent min-h-screen">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white rounded-[2.5rem] border border-[#FFD1DC] beauty-shadow overflow-hidden">
                 <div class="px-8 py-6 border-b border-[#FFD1DC] bg-gradient-to-r from-[#EAF8FF] to-white">

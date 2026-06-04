@@ -17,7 +17,7 @@
 
         @stack('styles')
     </head>
-    <body class="font-sans antialiased bg-[#FFF9FB] text-gray-800">
+    <body class="font-sans antialiased text-gray-800 bg-cover bg-center bg-no-repeat bg-fixed" style="background-image: url('{{ asset('images/BG.png') }}')">
 
         {{-- Loading Indicator --}}
         <x-loading-indicator />
@@ -31,7 +31,7 @@
         </main>
 
         {{-- Footer dengan tema Beutify --}}
-        <footer class="bg-white border-t border-[#FFD1DC]/60 mt-16">
+        <footer class="bg-white/80 backdrop-blur-md border-t border-[#FFD1DC]/60 mt-16">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     <!-- Brand -->

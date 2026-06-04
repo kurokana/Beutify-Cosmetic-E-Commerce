@@ -19,7 +19,7 @@
         </nav>
     </x-slot>
 
-    <div class="relative py-8 bg-[#FFF5F8] min-h-screen overflow-hidden">
+    <div class="relative py-8 bg-transparent min-h-screen overflow-hidden">
         
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             

@@ -1,4 +1,4 @@
-<x-app-layout>
+﻿<x-app-layout>
     <style>
         /* Memaksa warna agar sesuai dengan tema Beauty */
         .text-beauty-pink { color: #E86FA3 !important; }
@@ -17,7 +17,7 @@
         </nav>
     </x-slot>
 
-    <div class="py-12 bg-[#FFF9FC] min-h-screen">
+    <div class="py-12 bg-transparent min-h-screen">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 space-y-8">
 
             {{-- Profile Card --}}

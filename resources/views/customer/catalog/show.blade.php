@@ -1,4 +1,4 @@
-<x-app-layout>
+﻿<x-app-layout>
     <style>
         .font-display { font-family: 'Playfair Display', Georgia, serif; }
         /* Adjusted to match cart styling */
@@ -18,7 +18,7 @@
         </nav>
     </x-slot>
 
-    <div class="min-h-screen bg-[#FFF5F8] py-8">
+    <div class="min-h-screen bg-transparent py-8">
         
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
