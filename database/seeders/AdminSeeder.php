@@ -18,13 +18,13 @@ class AdminSeeder extends Seeder
             [
                 'name'              => 'Administrator',
                 'email'             => 'admin@kosmetik.example.com',
-                'password'          => Hash::make('Admin@12345'),
+                'password'          => Hash::make('123123123'),
                 'role'              => 'admin',
                 'is_active'         => true,
                 'email_verified_at' => now(),
             ]
         );
 
-        $this->command->info('Admin account seeded: admin@kosmetik.example.com / Admin@12345');
+        $this->command->info('Admin account seeded: admin@kosmetik.example.com / 123123123');
     }
 }
